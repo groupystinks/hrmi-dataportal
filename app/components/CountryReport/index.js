@@ -11,7 +11,6 @@ import { injectIntl, intlShape, FormattedMessage } from 'react-intl';
 
 import { Heading } from 'grommet';
 
-import CountrySummaryChart from 'components/CountrySummaryChart';
 import CountryNarrative from 'components/CountryNarrative';
 import LoadingIndicator from 'components/LoadingIndicator';
 import MainColumn from 'styled/MainColumn';
@@ -34,7 +33,6 @@ function CountryReport({
   countryTitle,
   dimensions,
   rights,
-  scale,
   benchmark,
   standard,
   indicators,
@@ -44,8 +42,8 @@ function CountryReport({
   atRiskData,
   onAtRiskClick,
   reference,
-  esrYear,
-  cprYear,
+  year,
+  type,
   dataReady,
   hasAside,
 }) {
@@ -64,15 +62,6 @@ function CountryReport({
               }}
             />
           </StyledHeading>
-          <CountrySummaryChart
-            scale={scale}
-            dimensions={dimensions}
-            rights={rights}
-            benchmark={benchmark}
-            standard={standard}
-            esrYear={esrYear}
-            cprYear={cprYear}
-          />
           <CountryNarrative
             dimensions={dimensions}
             rights={rights}
@@ -84,8 +73,8 @@ function CountryReport({
             atRiskData={atRiskData}
             onAtRiskClick={onAtRiskClick}
             reference={reference}
-            esrYear={esrYear}
-            cprYear={cprYear}
+            year={year}
+            type={type}
           />
         </>
       )}
@@ -95,6 +84,7 @@ function CountryReport({
 
 CountryReport.propTypes = {
   countryTitle: PropTypes.string,
+  type: PropTypes.string,
   onMetricClick: PropTypes.func,
   onAtRiskClick: PropTypes.func,
   hasAside: PropTypes.bool,
@@ -104,12 +94,10 @@ CountryReport.propTypes = {
   rights: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
   dimensions: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
   country: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
-  scale: PropTypes.oneOfType([PropTypes.bool, PropTypes.string]),
   standard: PropTypes.oneOfType([PropTypes.bool, PropTypes.string]),
   benchmark: PropTypes.oneOfType([PropTypes.bool, PropTypes.string]),
   intl: intlShape.isRequired,
-  esrYear: PropTypes.number,
-  cprYear: PropTypes.number,
+  year: PropTypes.number,
   dataReady: PropTypes.bool,
 };
 

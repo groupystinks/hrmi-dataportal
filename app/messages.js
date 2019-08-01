@@ -145,7 +145,11 @@ export default defineMessages({
     },
     report: {
       id: `${scope}.tabs.report`,
-      defaultMessage: 'Report',
+      defaultMessage: 'CPR report',
+    },
+    reportESR: {
+      id: `${scope}.tabs.reportESR`,
+      defaultMessage: 'ESR Report',
     },
     singleMetric: {
       id: `${scope}.tabs.singleMetric`,

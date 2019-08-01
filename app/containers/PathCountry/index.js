@@ -182,11 +182,6 @@ export function PathCountry({
             {
               key: 'report',
               title: intl.formatMessage(rootMessages.tabs.report),
-              howToRead: {
-                contxt: 'PathCountry',
-                chart: 'Summary',
-                data: scale,
-              },
               content: props => (
                 <CountryReport
                   {...props}
@@ -204,9 +199,34 @@ export function PathCountry({
                   onMetricClick={(metric, tab) =>
                     onMetricClick(countryCode, metric, tab)
                   }
-                  esrYear={esrYear}
-                  cprYear={cprYear}
+                  year={cprYear}
                   dataReady={dataReady}
+                  type="cpr"
+                />
+              ),
+            },
+            {
+              key: 'reportESR',
+              title: intl.formatMessage(rootMessages.tabs.reportESR),
+              content: props => (
+                <CountryReport
+                  {...props}
+                  countryTitle={countryTitle}
+                  dimensions={dimensions}
+                  rights={rights}
+                  indicators={indicators}
+                  country={country}
+                  benchmark={benchmark}
+                  atRiskData={atRisk}
+                  standard={standard}
+                  reference={dimensionAverages}
+                  onAtRiskClick={() => onAtRiskClick()}
+                  onMetricClick={(metric, tab) =>
+                    onMetricClick(countryCode, metric, tab)
+                  }
+                  year={esrYear}
+                  dataReady={dataReady}
+                  type="esr"
                 />
               ),
             },
@@ -331,7 +351,7 @@ export function mapDispatchToProps(dispatch) {
       ),
     onAtRiskClick: () => {
       window.scrollTo(0, 0);
-      return dispatch(setTab(1));
+      return dispatch(setTab(2));
     },
     onCloseMetricOverlay: country =>
       dispatch(
