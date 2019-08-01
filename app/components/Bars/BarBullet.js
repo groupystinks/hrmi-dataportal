@@ -79,10 +79,12 @@ function BarBullet({
   direction,
   annotateOnHover,
   hoverEnabled = true,
+  height,
 }) {
   const [hover, setHover] = useState(false);
   const [touched, setTouched] = useState(false);
   const { color, value, maxValue, unit, band, labels } = data;
+  const h = height || HEIGHT[level];
   return (
     <Wrapper
       onTouchStart={() => {
@@ -102,11 +104,11 @@ function BarBullet({
     >
       {showLabels && <MinLabel>0</MinLabel>}
       <BarWrapper>
-        <BarAnchor height={HEIGHT[level]}>
+        <BarAnchor height={h}>
           {value && <BarReference />}
           {value && (
             <BarValue
-              height={HEIGHT[level]}
+              height={h}
               style={{ width: `${(value / maxValue) * 100}%` }}
             />
           )}
@@ -114,7 +116,7 @@ function BarBullet({
             <BarBand
               color={color}
               active={hover && hoverEnabled}
-              height={HEIGHT[level]}
+              height={h}
               lo={(band.lo / maxValue) * 100}
               hi={(band.hi / maxValue) * 100}
               style={{
@@ -127,7 +129,7 @@ function BarBullet({
           {value && (
             <MarkValue
               color={color}
-              height={HEIGHT[level]}
+              height={h}
               level={level}
               style={{ left: `${(value / maxValue) * 100}%` }}
             />
@@ -135,14 +137,14 @@ function BarBullet({
           {value && (
             <MarkBound
               color={color}
-              height={HEIGHT[level]}
+              height={h}
               style={{ left: `${(band.lo / maxValue) * 100}%` }}
             />
           )}
           {value && (
             <MarkBound
               color={color}
-              height={HEIGHT[level]}
+              height={h}
               style={{ left: `${(band.hi / maxValue) * 100}%` }}
             />
           )}
@@ -224,6 +226,7 @@ function BarBullet({
 
 BarBullet.propTypes = {
   data: PropTypes.oneOfType([PropTypes.bool, PropTypes.object]),
+  height: PropTypes.number,
   level: PropTypes.number,
   showLabels: PropTypes.bool,
   showScore: PropTypes.bool,

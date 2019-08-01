@@ -5,6 +5,7 @@ import { Box, ResponsiveContext } from 'grommet';
 import { COLUMNS } from 'containers/App/constants';
 
 import BarMultiple from 'components/Bars/BarMultiple';
+import BarBulletMultiple from 'components/Bars/BarBulletMultiple';
 import AnnotateBetter from 'components/AnnotateBetterWorse';
 import { isMinSize } from 'utils/responsive';
 import DimensionTitle from './DimensionTitle';
@@ -42,7 +43,10 @@ const getDimensionValue = (data, benchmark) => {
   }
   return false;
 };
-
+const getBand = score => ({
+  lo: score && parseFloat(score[COLUMNS.CPR.LO]),
+  hi: score && parseFloat(score[COLUMNS.CPR.HI]),
+});
 function RightsChart({ data, standard, benchmark, scoreWidth }) {
   if (!data) return null;
   const dataMultiple = {
@@ -56,6 +60,7 @@ function RightsChart({ data, standard, benchmark, scoreWidth }) {
       data.rights.map(right => ({
         key: right.key,
         value: getDimensionValue(right, benchmark),
+        band: right.type === 'cpr' && getBand(right.score),
         refValues:
           right.type === 'esr' &&
           getDimensionRefs(right.score, standard, benchmark),
@@ -87,12 +92,21 @@ function RightsChart({ data, standard, benchmark, scoreWidth }) {
                 style={{ position: 'relative' }}
                 responsive={false}
               >
-                <BarMultiple
-                  dataMultiple={dataMultiple}
-                  showLabels
-                  totalHeight={36}
-                  annotateBenchmarkAbove={data.type === 'esr'}
-                />
+                {data.type === 'cpr' && (
+                  <BarBulletMultiple
+                    dataMultiple={dataMultiple}
+                    showLabels
+                    totalHeight={36}
+                  />
+                )}
+                {data.type === 'esr' && (
+                  <BarMultiple
+                    dataMultiple={dataMultiple}
+                    showLabels
+                    totalHeight={36}
+                    annotateBenchmarkAbove={data.type === 'esr'}
+                  />
+                )}
                 <WrapAnnotateBetter>
                   <AnnotateBetter absolute />
                 </WrapAnnotateBetter>
