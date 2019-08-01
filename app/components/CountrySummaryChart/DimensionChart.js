@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { Box, Text, ResponsiveContext } from 'grommet';
 
 import Bar from 'components/Bars/Bar';
+import BarBullet from 'components/Bars/BarBullet';
 import { COLUMNS } from 'containers/App/constants';
 import AnnotateBetter from 'components/AnnotateBetterWorse';
 import formatScoreMax from 'utils/format-score-max';
@@ -42,7 +43,10 @@ const getDimensionValue = (data, benchmark) => {
   }
   return false;
 };
-
+const getBand = score => ({
+  lo: score && parseFloat(score[COLUMNS.CPR.LO]),
+  hi: score && parseFloat(score[COLUMNS.CPR.HI]),
+});
 function DimensionChart({ data, benchmark, standard, scoreWidth }) {
   if (!data) return null;
   const maxValue = data.type === 'cpr' ? 10 : 100;
@@ -50,6 +54,7 @@ function DimensionChart({ data, benchmark, standard, scoreWidth }) {
     ...data,
     color: data.key,
     value: getDimensionValue(data, benchmark),
+    band: data.type === 'cpr' && getBand(data.score),
     refValues: data.type === 'esr' && getDimensionRefs(data.score, benchmark),
     maxValue,
     stripes: data.type === 'esr' && standard === 'hi',
@@ -77,12 +82,15 @@ function DimensionChart({ data, benchmark, standard, scoreWidth }) {
                 style={{ position: 'relative' }}
                 responsive={false}
               >
-                <Bar
-                  data={dim}
-                  showLabels
-                  annotateBenchmarkAbove
-                  showBenchmark
-                />
+                {data.type === 'cpr' && <BarBullet data={dim} showLabels />}
+                {data.type === 'esr' && (
+                  <Bar
+                    data={dim}
+                    showLabels
+                    annotateBenchmarkAbove
+                    showBenchmark
+                  />
+                )}
                 <WrapAnnotateBetter>
                   <AnnotateBetter absolute />
                 </WrapAnnotateBetter>
