@@ -37,13 +37,6 @@ const BarReference = styled.div`
   background-color: ${props => props.theme.global.colors['light-2']};
 `;
 
-const BarValue = styled.div`
-  position: absolute;
-  left: 0;
-  top: ${props => props.height / 2 - props.height * 0.15}px;
-  height: ${props => props.height * 0.3}px;
-  background-color: ${props => props.theme.global.colors['light-5']};
-`;
 const MarkValue = styled.div`
   position: absolute;
   top: 0;
@@ -106,12 +99,6 @@ function BarBullet({
       <BarWrapper>
         <BarAnchor height={h}>
           {value && <BarReference />}
-          {value && (
-            <BarValue
-              height={h}
-              style={{ width: `${(value / maxValue) * 100}%` }}
-            />
-          )}
           {value && (
             <BarBand
               color={color}
