@@ -121,8 +121,8 @@ function RightsChart({ data, standard, benchmark, scoreWidth }) {
             <Box direction="row">
               <Hint>
                 <Text size="xsmall">
-                  <strong>Grade</strong>
-                  &nbsp;(Score)
+                  <strong>Grades</strong>
+                  &nbsp;(Scores)
                 </Text>
               </Hint>
             </Box>
