@@ -21,6 +21,8 @@ import Source from 'components/Source';
 
 import DimensionChart from './DimensionChart';
 import RightsChart from './RightsChart';
+import DimensionGrade from './DimensionGrade';
+import RightsGrades from './RightsGrades';
 
 const RightsType = styled(Box)`
   margin-bottom: 6px;
@@ -121,16 +123,15 @@ function CountrySummaryChart({
                   {` (${esrYear})`}
                 </RightsTypeHeading>
                 {scale === 'd' && (
-                  <DimensionChart
+                  <DimensionGrade
                     data={dimensions && dimensions.esr}
                     grades={GRADES_ESR}
                     benchmark={currentBenchmark}
                     standard={standard}
-                    scoreWidth={isMinSize(size, 'medium') ? '200px' : '50px'}
                   />
                 )}
                 {scale === 'r' && (
-                  <RightsChart
+                  <RightsGrades
                     data={{
                       rights: esrRights,
                       type: 'esr',
