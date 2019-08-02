@@ -1,5 +1,5 @@
 import messages from 'messages';
-import { RIGHTS } from 'containers/App/constants';
+import { RIGHTS, GRADES_ESR } from 'containers/App/constants';
 
 export const getRightsScoresForDimension = (
   rights,
@@ -192,3 +192,9 @@ export const filterByAssessment = (
   }
   return true;
 };
+
+export const getESRGradeForScore = score =>
+  GRADES_ESR.reduce((memo, grade) => {
+    if (score > grade.min) return grade.grade;
+    return memo;
+  }, GRADES_ESR[0].grade);

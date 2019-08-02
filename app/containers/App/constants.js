@@ -536,3 +536,30 @@ export const INDICATORS = [
     resource: 'esrIndicatorScores',
   },
 ];
+
+export const GRADES_ESR = [
+  {
+    grade: 'F',
+    min: 0,
+  },
+  {
+    grade: 'D',
+    min: 68,
+  },
+  {
+    grade: 'C',
+    min: 78,
+  },
+  {
+    grade: 'B',
+    min: 88,
+  },
+  {
+    grade: 'A-',
+    min: 98,
+  },
+  {
+    grade: 'A',
+    min: 100,
+  },
+];

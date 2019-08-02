@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { Box, Text, ResponsiveContext } from 'grommet';
 
 import Bar from 'components/Bars/Bar';
+import BarSteps from 'components/Bars/BarSteps';
 import { COLUMNS } from 'containers/App/constants';
 import AnnotateBetter from 'components/AnnotateBetterWorse';
 import formatScoreMax from 'utils/format-score-max';
@@ -20,6 +21,11 @@ const WrapAnnotateBetter = styled.div`
   right: ${({ theme }) => theme.global.edgeSize.large};
   top: 100%;
   margin-top: -4px;
+`;
+
+const GradeMin = styled.div`
+  position: absolute;
+  top: 0;
 `;
 
 const getDimensionRefs = (score, benchmark) => {
@@ -43,7 +49,7 @@ const getDimensionValue = (data, benchmark) => {
   return false;
 };
 
-function DimensionChart({ data, benchmark, standard, scoreWidth }) {
+function DimensionChart({ data, benchmark, standard, scoreWidth, grades }) {
   if (!data) return null;
   const maxValue = data.type === 'cpr' ? 10 : 100;
   const dim = {
@@ -77,15 +83,34 @@ function DimensionChart({ data, benchmark, standard, scoreWidth }) {
                 style={{ position: 'relative' }}
                 responsive={false}
               >
-                <Bar
-                  data={dim}
-                  showLabels
-                  annotateBenchmarkAbove
-                  showBenchmark
-                />
-                <WrapAnnotateBetter>
-                  <AnnotateBetter absolute />
-                </WrapAnnotateBetter>
+                {!grades && (
+                  <Bar
+                    data={dim}
+                    showLabels
+                    annotateBenchmarkAbove
+                    showBenchmark
+                  />
+                )}
+                {grades && <BarSteps data={dim} grades={grades} />}
+                {!grades && (
+                  <WrapAnnotateBetter>
+                    <AnnotateBetter absolute />
+                  </WrapAnnotateBetter>
+                )}
+                {grades && (
+                  <WrapAnnotateBetter>
+                    {grades.map((grade, index) => (
+                      <GradeMin
+                        style={{
+                          width: `${100 / grades.length}%`,
+                          left: `${(index * 100) / grades.length}%`,
+                        }}
+                      >
+                        <Text size="xsmall">{`> ${grade.min}%`}</Text>
+                      </GradeMin>
+                    ))}
+                  </WrapAnnotateBetter>
+                )}
               </Box>
               <DimensionScoreWrapper width={scoreWidth}>
                 <Text
@@ -106,6 +131,7 @@ function DimensionChart({ data, benchmark, standard, scoreWidth }) {
 }
 
 DimensionChart.propTypes = {
+  grades: PropTypes.array,
   benchmark: PropTypes.object,
   standard: PropTypes.string,
   scoreWidth: PropTypes.string,

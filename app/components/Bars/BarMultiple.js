@@ -9,6 +9,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 import Bar from './Bar';
+import BarSteps from './BarSteps';
 import AnnotateBenchmark from './AnnotateBenchmark';
 import BarWrapper from './styled/BarWrapper';
 import MinLabel from './styled/MinLabel';
@@ -36,6 +37,7 @@ function BarMultiple({
   heightIndividual,
   annotateBenchmarkAbove,
   scoreOnHover,
+  grades,
 }) {
   const {
     color,
@@ -60,7 +62,7 @@ function BarMultiple({
 
   return (
     <Wrapper ht={ht}>
-      {showLabels && <MinLabel rotate={rotate}>0</MinLabel>}
+      {!grades && showLabels && <MinLabel rotate={rotate}>0</MinLabel>}
       {data &&
         data.map((datum, index, list) => (
           <BarWrapInner
@@ -68,25 +70,41 @@ function BarMultiple({
             first={index === 0}
             last={index === list.length - 1}
           >
-            <Bar
-              data={{
-                ...datum,
-                stripes,
-                unit,
-                maxValue,
-                color,
-              }}
-              level={3}
-              showLabels={false}
-              showBenchmark={false}
-              rotate={rotate}
-              showIncompleteAction={false}
-              height={Math.round(hi)}
-              scoreOnHover={scoreOnHover}
-            />
+            {!grades && (
+              <Bar
+                data={{
+                  ...datum,
+                  stripes,
+                  unit,
+                  maxValue,
+                  color,
+                }}
+                level={3}
+                showLabels={false}
+                showBenchmark={false}
+                rotate={rotate}
+                showIncompleteAction={false}
+                height={Math.round(hi)}
+                scoreOnHover={scoreOnHover}
+              />
+            )}
+            {grades && (
+              <BarSteps
+                data={{
+                  ...datum,
+                  stripes,
+                  unit,
+                  maxValue,
+                  color,
+                }}
+                level={3}
+                height={Math.round(hi)}
+                grades={grades}
+              />
+            )}
           </BarWrapInner>
         ))}
-      {showLabels && !!benchmark && (
+      {!grades && showLabels && !!benchmark && (
         <AnnotateBenchmark
           rotate={rotate}
           benchmarkKey={benchmark}
@@ -94,18 +112,19 @@ function BarMultiple({
           margin={annotateBenchmarkAbove ? '0px 1px' : '0'}
         />
       )}
-      {showLabels && (
+      {!grades && showLabels && (
         <MaxLabel rotate={rotate} bottom={tooltip}>
           {unit ? `${maxValue}${unit}` : `${maxValue}`}
         </MaxLabel>
       )}
-      {tooltip && <WrapTooltip>{tooltip}</WrapTooltip>}
+      {!grades && tooltip && <WrapTooltip>{tooltip}</WrapTooltip>}
     </Wrapper>
   );
 }
 
 BarMultiple.propTypes = {
   dataMultiple: PropTypes.oneOfType([PropTypes.bool, PropTypes.object]),
+  grades: PropTypes.array,
   showLabels: PropTypes.bool,
   annotateBenchmarkAbove: PropTypes.bool,
   totalHeight: PropTypes.number,

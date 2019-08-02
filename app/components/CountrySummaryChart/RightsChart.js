@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { Box, ResponsiveContext } from 'grommet';
+import { Box, Text, ResponsiveContext } from 'grommet';
 import { COLUMNS } from 'containers/App/constants';
 
 import BarMultiple from 'components/Bars/BarMultiple';
@@ -21,6 +21,11 @@ const WrapAnnotateBetter = styled.div`
   right: ${({ theme }) => theme.global.edgeSize.large};
   top: 100%;
   margin-top: -4px;
+`;
+
+const GradeMin = styled.div`
+  position: absolute;
+  top: 0;
 `;
 
 const getDimensionRefs = (score, standard, benchmark) => {
@@ -43,7 +48,7 @@ const getDimensionValue = (data, benchmark) => {
   return false;
 };
 
-function RightsChart({ data, standard, benchmark, scoreWidth }) {
+function RightsChart({ data, standard, benchmark, scoreWidth, grades }) {
   if (!data) return null;
   const dataMultiple = {
     color: data.dimension,
@@ -89,13 +94,30 @@ function RightsChart({ data, standard, benchmark, scoreWidth }) {
               >
                 <BarMultiple
                   dataMultiple={dataMultiple}
+                  grades={grades}
                   showLabels
                   totalHeight={36}
                   annotateBenchmarkAbove={data.type === 'esr'}
                 />
-                <WrapAnnotateBetter>
-                  <AnnotateBetter absolute />
-                </WrapAnnotateBetter>
+                {!grades && (
+                  <WrapAnnotateBetter>
+                    <AnnotateBetter absolute />
+                  </WrapAnnotateBetter>
+                )}
+                {grades && (
+                  <WrapAnnotateBetter>
+                    {grades.map((grade, index) => (
+                      <GradeMin
+                        style={{
+                          width: `${100 / grades.length}%`,
+                          left: `${(index * 100) / grades.length}%`,
+                        }}
+                      >
+                        <Text size="xsmall">{`> ${grade.min}%`}</Text>
+                      </GradeMin>
+                    ))}
+                  </WrapAnnotateBetter>
+                )}
               </Box>
             </Box>
             <Box flex={{ shrink: 0 }} width={scoreWidth}>
@@ -123,6 +145,7 @@ function RightsChart({ data, standard, benchmark, scoreWidth }) {
 
 RightsChart.propTypes = {
   benchmark: PropTypes.object,
+  grades: PropTypes.array,
   standard: PropTypes.string,
   scoreWidth: PropTypes.string,
   data: PropTypes.oneOfType([PropTypes.bool, PropTypes.object]),

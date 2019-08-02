@@ -13,7 +13,7 @@ import { isMinSize } from 'utils/responsive';
 
 import rootMessages from 'messages';
 // import messages from './messages';
-import { BENCHMARKS } from 'containers/App/constants';
+import { BENCHMARKS, GRADES_ESR } from 'containers/App/constants';
 import ScaleToggle from 'containers/Settings/ScaleToggle';
 import { getRightsScoresForDimension } from 'utils/scores';
 
@@ -123,6 +123,7 @@ function CountrySummaryChart({
                 {scale === 'd' && (
                   <DimensionChart
                     data={dimensions && dimensions.esr}
+                    grades={GRADES_ESR}
                     benchmark={currentBenchmark}
                     standard={standard}
                     scoreWidth={isMinSize(size, 'medium') ? '200px' : '50px'}
@@ -135,6 +136,7 @@ function CountrySummaryChart({
                       type: 'esr',
                       dimension: 'esr',
                     }}
+                    grades={GRADES_ESR}
                     benchmark={currentBenchmark}
                     standard={standard}
                     scoreWidth={isMinSize(size, 'medium') ? '200px' : '50px'}
