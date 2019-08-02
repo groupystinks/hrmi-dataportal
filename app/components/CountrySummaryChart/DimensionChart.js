@@ -7,12 +7,15 @@ import Bar from 'components/Bars/Bar';
 import BarSteps from 'components/Bars/BarSteps';
 import { COLUMNS } from 'containers/App/constants';
 import AnnotateBetter from 'components/AnnotateBetterWorse';
+import Hint from 'styled/Hint';
 import formatScoreMax from 'utils/format-score-max';
 import { isMinSize } from 'utils/responsive';
+import { getESRGradeForScore } from 'utils/scores';
 
 import DimensionTitle from './DimensionTitle';
 
 const DimensionScoreWrapper = props => <Box {...props} flex={{ shrink: 0 }} />;
+
 const BarWrap = props => <Box direction="row" {...props} align="center" />;
 
 const WrapAnnotateBetter = styled.div`
@@ -106,22 +109,62 @@ function DimensionChart({ data, benchmark, standard, scoreWidth, grades }) {
                           left: `${(index * 100) / grades.length}%`,
                         }}
                       >
-                        <Text size="xsmall">{`> ${grade.min}%`}</Text>
+                        <Text size="xsmall">
+                          {`${grade.grade} (> ${grade.min}%)`}
+                        </Text>
                       </GradeMin>
                     ))}
                   </WrapAnnotateBetter>
                 )}
               </Box>
-              <DimensionScoreWrapper width={scoreWidth}>
-                <Text
-                  weight="bold"
-                  size={isMinSize(size, 'medium') ? 'large' : 'medium'}
-                  color={`${data.key}Dark`}
-                >
-                  {dim.value && formatScoreMax(dim.value, maxValue)}
-                  {!dim.value && 'N/A'}
-                </Text>
-              </DimensionScoreWrapper>
+              {!grades && (
+                <DimensionScoreWrapper width={scoreWidth}>
+                  <Box direction="row">
+                    <Text size="xsmall">
+                      <Hint>
+                        <strong>Score</strong>
+                      </Hint>
+                    </Text>
+                  </Box>
+                  <Text
+                    weight="bold"
+                    size={isMinSize(size, 'medium') ? 'large' : 'medium'}
+                    color={`${data.key}Dark`}
+                  >
+                    {dim.value && formatScoreMax(dim.value, maxValue)}
+                    {!dim.value && 'N/A'}
+                  </Text>
+                </DimensionScoreWrapper>
+              )}
+              {grades && (
+                <DimensionScoreWrapper width={scoreWidth}>
+                  <Box direction="row">
+                    <Text size="xsmall">
+                      <Hint>
+                        <strong>Grade</strong>
+                        &nbsp;(Score)
+                      </Hint>
+                    </Text>
+                  </Box>
+                  <Box direction="row">
+                    <Text
+                      weight="bold"
+                      size={isMinSize(size, 'medium') ? 'large' : 'medium'}
+                      color={`${data.key}Dark`}
+                    >
+                      {dim.value && getESRGradeForScore(dim.value)}
+                      {!dim.value && 'N/A'}
+                    </Text>
+                    <Text
+                      size={isMinSize(size, 'medium') ? 'large' : 'medium'}
+                      color={`${data.key}Dark`}
+                    >
+                      &nbsp;
+                      {dim.value && ` (${formatScoreMax(dim.value, maxValue)})`}
+                    </Text>
+                  </Box>
+                </DimensionScoreWrapper>
+              )}
             </BarWrap>
           </Box>
         </>
