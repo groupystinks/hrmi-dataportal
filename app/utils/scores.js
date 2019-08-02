@@ -195,6 +195,6 @@ export const filterByAssessment = (
 
 export const getESRGradeForScore = score =>
   GRADES_ESR.reduce((memo, grade) => {
-    if (score > grade.min) return grade.grade;
+    if (score >= grade.min) return grade.grade;
     return memo;
   }, GRADES_ESR[0].grade);

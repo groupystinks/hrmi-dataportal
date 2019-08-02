@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Box, Text } from 'grommet';
 import styled from 'styled-components';
 import formatScore from 'utils/format-score';
+import { getESRGradeForScore } from 'utils/scores';
 
 const getRotation = rotation => `rotate(${rotation}deg)`;
 
@@ -56,6 +57,7 @@ function Score({
   align,
   rotate,
   title,
+  grade,
 }) {
   return (
     <Styled
@@ -81,9 +83,20 @@ function Score({
           </Text>
         )}
         {score && (
-          <Text color={`${color}Dark`} size={getSize(level)}>
-            {score && `${formatScore(score)}${unit}`}
-          </Text>
+          <Box direction="column" align="center">
+            <Text color={`${color}Dark`} size={getSize(level)}>
+              {score && `${formatScore(score)}${unit}`}
+            </Text>
+            {grade && (
+              <Text
+                color={`${color}Dark`}
+                size={getSize(level + 1)}
+                weight="normal"
+              >
+                {` (Grade: ${getESRGradeForScore(score)})`}
+              </Text>
+            )}
+          </Box>
         )}
       </Box>
     </Styled>
@@ -94,6 +107,7 @@ Score.propTypes = {
   score: PropTypes.number,
   left: PropTypes.number,
   secondary: PropTypes.bool,
+  grade: PropTypes.bool,
   color: PropTypes.string,
   unit: PropTypes.string,
   align: PropTypes.string,

@@ -78,7 +78,7 @@ function DimensionMain({ dimension, benchmark, standard }) {
         <Bar
           data={data}
           showLabels
-          showScore
+          showGrade
           annotateBenchmarkAbove
           showBenchmark
           showAllBenchmarkAnnotations
