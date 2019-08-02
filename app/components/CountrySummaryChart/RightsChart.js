@@ -6,7 +6,9 @@ import { COLUMNS } from 'containers/App/constants';
 
 import BarMultiple from 'components/Bars/BarMultiple';
 import AnnotateBetter from 'components/AnnotateBetterWorse';
+import Hint from 'styled/Hint';
 import { isMinSize } from 'utils/responsive';
+import { getESRGradeForScore } from 'utils/scores';
 import DimensionTitle from './DimensionTitle';
 import RightsScoreItem from './RightsScoreItem';
 
@@ -113,29 +115,65 @@ function RightsChart({ data, standard, benchmark, scoreWidth, grades }) {
                           left: `${(index * 100) / grades.length}%`,
                         }}
                       >
-                        <Text size="xsmall">{`> ${grade.min}%`}</Text>
+                        <Text size="xsmall">
+                          {`${grade.grade} (> ${grade.min}%)`}
+                        </Text>
                       </GradeMin>
                     ))}
                   </WrapAnnotateBetter>
                 )}
               </Box>
             </Box>
-            <Box flex={{ shrink: 0 }} width={scoreWidth}>
-              <RightsScoresWrapperTable>
-                {dataMultiple.data &&
-                  dataMultiple.data.map(right => (
-                    <RightsScoreItem
-                      key={right.key}
-                      dimensionKey={data.dimension}
-                      maxValue={dataMultiple.maxValue}
-                      right={{
-                        key: right.key,
-                        value: right.value,
-                      }}
-                    />
-                  ))}
-              </RightsScoresWrapperTable>
-            </Box>
+            {!grades && (
+              <Box flex={{ shrink: 0 }} width={scoreWidth}>
+                <Text size="xsmall" style={{ margin: '-24px 0 24px' }}>
+                  <Hint>
+                    <strong>Scores</strong>
+                  </Hint>
+                </Text>
+                <RightsScoresWrapperTable>
+                  {dataMultiple.data &&
+                    dataMultiple.data.map(right => (
+                      <RightsScoreItem
+                        key={right.key}
+                        dimensionKey={data.dimension}
+                        maxValue={dataMultiple.maxValue}
+                        right={{
+                          key: right.key,
+                          value: right.value,
+                        }}
+                      />
+                    ))}
+                </RightsScoresWrapperTable>
+              </Box>
+            )}
+            {grades && (
+              <Box flex={{ shrink: 0 }} width={scoreWidth}>
+                <Box direction="row" style={{ margin: '-24px 0 24px' }}>
+                  <Text size="xsmall">
+                    <Hint>
+                      <strong>Grades</strong>
+                      &nbsp;(Scores)
+                    </Hint>
+                  </Text>
+                </Box>
+                <RightsScoresWrapperTable>
+                  {dataMultiple.data &&
+                    dataMultiple.data.map(right => (
+                      <RightsScoreItem
+                        key={right.key}
+                        dimensionKey={data.dimension}
+                        maxValue={dataMultiple.maxValue}
+                        right={{
+                          key: right.key,
+                          value: right.value,
+                          grade: getESRGradeForScore(right.value),
+                        }}
+                      />
+                    ))}
+                </RightsScoresWrapperTable>
+              </Box>
+            )}
           </Box>
         </Box>
       )}

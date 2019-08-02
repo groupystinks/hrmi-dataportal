@@ -17,7 +17,7 @@ const RightsScoresWrapperRow = styled.div`
   }
 `;
 const RightsScoresWrapperCellScore = styled.div`
-  width: 50px;
+  width: ${props => (props.wide ? 65 : 50)}px;
   display: table-cell;
   border-bottom: 1px solid;
   border-bottom-color: inherit;
@@ -46,11 +46,27 @@ const RightLabelText = styled.span`
 function RightsScoresItem({ dimensionKey, right, maxValue }) {
   return (
     <RightsScoresWrapperRow>
-      <RightsScoresWrapperCellScore>
-        <RightScoreText color={`${dimensionKey}Dark`}>
-          {right.value && formatScoreMax(right.value, maxValue)}
-          {!right.value && 'N/A'}
-        </RightScoreText>
+      <RightsScoresWrapperCellScore wide={!!right.grade}>
+        {!right.grade && (
+          <RightScoreText color={`${dimensionKey}Dark`}>
+            {right.value && formatScoreMax(right.value, maxValue)}
+            {!right.value && 'N/A'}
+          </RightScoreText>
+        )}
+        {right.grade && (
+          <>
+            <RightScoreText color={`${dimensionKey}Dark`}>
+              {right.value && right.grade}
+              {!right.value && 'N/A'}
+            </RightScoreText>
+            {right.value && (
+              <Text size="small" color={`${dimensionKey}Dark`}>
+                &nbsp;
+                {`(${formatScoreMax(right.value, maxValue, 0)})`}
+              </Text>
+            )}
+          </>
+        )}
       </RightsScoresWrapperCellScore>
       <RightsScoresWrapperCellLabel>
         <RightLabelText color={`${dimensionKey}Dark`}>

@@ -119,13 +119,11 @@ function DimensionChart({ data, benchmark, standard, scoreWidth, grades }) {
               </Box>
               {!grades && (
                 <DimensionScoreWrapper width={scoreWidth}>
-                  <Box direction="row">
-                    <Text size="xsmall">
-                      <Hint>
-                        <strong>Score</strong>
-                      </Hint>
-                    </Text>
-                  </Box>
+                  <Text size="xsmall">
+                    <Hint>
+                      <strong>Score</strong>
+                    </Hint>
+                  </Text>
                   <Text
                     weight="bold"
                     size={isMinSize(size, 'medium') ? 'large' : 'medium'}
