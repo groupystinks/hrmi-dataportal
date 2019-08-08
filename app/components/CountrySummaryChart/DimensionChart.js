@@ -13,10 +13,15 @@ import { isMinSize } from 'utils/responsive';
 import { getESRGradeForScore } from 'utils/scores';
 
 import DimensionTitle from './DimensionTitle';
-
+import GradationItem from './GradationItem';
 const DimensionScoreWrapper = props => <Box {...props} flex={{ shrink: 0 }} />;
 
 const BarWrap = props => <Box direction="row" {...props} align="center" />;
+
+const RightsScoresWrapperTable = styled.div`
+  display: table;
+  margin: -24px 0;
+`;
 
 const WrapAnnotateBetter = styled.div`
   position: absolute;
@@ -29,6 +34,8 @@ const WrapAnnotateBetter = styled.div`
 const GradeMin = styled.div`
   position: absolute;
   top: 0;
+  text-align: right;
+  padding-right: 5px;
 `;
 
 const getDimensionRefs = (score, benchmark) => {
@@ -64,6 +71,8 @@ function DimensionChart({ data, benchmark, standard, scoreWidth, grades }) {
     stripes: data.type === 'esr' && standard === 'hi',
     unit: data.type === 'esr' ? '%' : '',
   };
+
+  // prettier-ignore
   return (
     <ResponsiveContext.Consumer>
       {size => (
@@ -109,9 +118,14 @@ function DimensionChart({ data, benchmark, standard, scoreWidth, grades }) {
                           left: `${(index * 100) / grades.length}%`,
                         }}
                       >
-                        <Text size="xsmall">
-                          {`${grade.grade} (> ${grade.min}%)`}
-                        </Text>
+                        {dim.value &&
+                          getESRGradeForScore(dim.value) === grade.grade && (
+                          <Text weight="bold">{grade.grade}</Text>
+                        )}
+                        {!dim.value ||
+                          getESRGradeForScore(dim.value) !== grade.grade && (
+                            <Text size="xsmall">{grade.grade}</Text>
+                          )}
                       </GradeMin>
                     ))}
                   </WrapAnnotateBetter>
@@ -135,33 +149,28 @@ function DimensionChart({ data, benchmark, standard, scoreWidth, grades }) {
                 </DimensionScoreWrapper>
               )}
               {grades && (
-                <DimensionScoreWrapper width={scoreWidth}>
-                  <Box direction="row">
+                <Box flex={{ shrink: 0 }} width={scoreWidth}>
+                  <Box direction="row" style={{ margin: '-24px 0 24px' }}>
                     <Text size="xsmall">
                       <Hint>
-                        <strong>Grade</strong>
-                        &nbsp;(Score)
+                        <strong>Grade brackets</strong>
                       </Hint>
                     </Text>
                   </Box>
-                  <Box direction="row">
-                    <Text
-                      weight="bold"
-                      size={isMinSize(size, 'medium') ? 'large' : 'medium'}
-                      color={`${data.key}Dark`}
-                    >
-                      {dim.value && getESRGradeForScore(dim.value)}
-                      {!dim.value && 'N/A'}
-                    </Text>
-                    <Text
-                      size={isMinSize(size, 'medium') ? 'large' : 'medium'}
-                      color={`${data.key}Dark`}
-                    >
-                      &nbsp;
-                      {dim.value && ` (${formatScoreMax(dim.value, maxValue)})`}
-                    </Text>
-                  </Box>
-                </DimensionScoreWrapper>
+                  <RightsScoresWrapperTable>
+                    {[...grades].reverse().map(grade => (
+                      <GradationItem
+                        key={grade.grade}
+                        dimensionKey={data.dimension}
+                        right={{
+                          key: grade.grade,
+                          value: grade.min,
+                          grade: grade.grade,
+                        }}
+                      />
+                    ))}
+                  </RightsScoresWrapperTable>
+                </Box>
               )}
             </BarWrap>
           </Box>

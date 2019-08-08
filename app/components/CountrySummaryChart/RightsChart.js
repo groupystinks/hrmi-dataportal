@@ -8,9 +8,9 @@ import BarMultiple from 'components/Bars/BarMultiple';
 import AnnotateBetter from 'components/AnnotateBetterWorse';
 import Hint from 'styled/Hint';
 import { isMinSize } from 'utils/responsive';
-import { getESRGradeForScore } from 'utils/scores';
 import DimensionTitle from './DimensionTitle';
 import RightsScoreItem from './RightsScoreItem';
+import GradationItem from './GradationItem';
 
 const RightsScoresWrapperTable = styled.div`
   display: table;
@@ -28,6 +28,8 @@ const WrapAnnotateBetter = styled.div`
 const GradeMin = styled.div`
   position: absolute;
   top: 0;
+  text-align: right;
+  padding-right: 5px;
 `;
 
 const getDimensionRefs = (score, standard, benchmark) => {
@@ -115,9 +117,7 @@ function RightsChart({ data, standard, benchmark, scoreWidth, grades }) {
                           left: `${(index * 100) / grades.length}%`,
                         }}
                       >
-                        <Text size="xsmall">
-                          {`${grade.grade} (> ${grade.min}%)`}
-                        </Text>
+                        <Text size="xsmall">{grade.grade}</Text>
                       </GradeMin>
                     ))}
                   </WrapAnnotateBetter>
@@ -152,25 +152,22 @@ function RightsChart({ data, standard, benchmark, scoreWidth, grades }) {
                 <Box direction="row" style={{ margin: '-24px 0 24px' }}>
                   <Text size="xsmall">
                     <Hint>
-                      <strong>Grades</strong>
-                      &nbsp;(Scores)
+                      <strong>Grade brackets</strong>
                     </Hint>
                   </Text>
                 </Box>
                 <RightsScoresWrapperTable>
-                  {dataMultiple.data &&
-                    dataMultiple.data.map(right => (
-                      <RightsScoreItem
-                        key={right.key}
-                        dimensionKey={data.dimension}
-                        maxValue={dataMultiple.maxValue}
-                        right={{
-                          key: right.key,
-                          value: right.value,
-                          grade: getESRGradeForScore(right.value),
-                        }}
-                      />
-                    ))}
+                  {[...grades].reverse().map(grade => (
+                    <GradationItem
+                      key={grade.grade}
+                      dimensionKey={data.dimension}
+                      right={{
+                        key: grade.grade,
+                        value: grade.min,
+                        grade: grade.grade,
+                      }}
+                    />
+                  ))}
                 </RightsScoresWrapperTable>
               </Box>
             )}

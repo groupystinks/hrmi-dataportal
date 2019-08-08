@@ -46,7 +46,7 @@ const BarStep = styled.div`
   background-color: ${props =>
     !props.on || props.stripes ? 'transparent' : props.theme.global.colors[props.color]};
   opacity: ${props => props.active ? 0.8 : 1};
-  border-right: 2px solid white;
+  border-right: 1px solid white;
   ${props =>
     props.on && props.stripes &&
     css`

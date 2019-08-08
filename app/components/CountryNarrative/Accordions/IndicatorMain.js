@@ -47,7 +47,7 @@ function IndicatorMain({ indicator, benchmark, standard }) {
       style={{ position: 'relative' }}
       responsive={false}
     >
-      <Bar level={3} data={data} showScore showLabels />
+      <Bar level={3} data={data} showGrade showLabels />
     </Box>
   );
 }

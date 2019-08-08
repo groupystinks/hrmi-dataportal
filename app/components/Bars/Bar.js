@@ -105,6 +105,7 @@ function Bar({
   level = 1,
   showLabels = false,
   showScore = false,
+  showGrade = false,
   showBenchmark = false,
   rotate,
   showIncompleteAction = true,
@@ -232,6 +233,19 @@ function Bar({
             title={title}
           />
         )}
+        {showGrade && hasValue && (
+          <Score
+            rotate={rotate}
+            score={value}
+            left={(value / maxValue) * 100}
+            color={color}
+            unit={unit}
+            level={scoreOnHover ? 1 : level}
+            direction={scoreOnHover || 'bottom'}
+            title={title}
+            grade
+          />
+        )}
       </BarWrapper>
       {showLabels && (
         <MaxLabel rotate={rotate} bottom={data.tooltip}>
@@ -249,6 +263,7 @@ Bar.propTypes = {
   level: PropTypes.number,
   showLabels: PropTypes.bool,
   showScore: PropTypes.bool,
+  showGrade: PropTypes.bool,
   showBenchmark: PropTypes.bool,
   hoverEnabled: PropTypes.bool,
   showIncompleteAction: PropTypes.bool,
