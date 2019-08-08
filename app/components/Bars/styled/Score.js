@@ -93,7 +93,7 @@ function Score({
                 size={getSize(level + 1)}
                 weight="normal"
               >
-                {` (Grade: ${getESRGradeForScore(score)})`}
+                {` Grade: ${getESRGradeForScore(score)}`}
               </Text>
             )}
           </Box>

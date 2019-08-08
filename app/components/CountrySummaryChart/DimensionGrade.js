@@ -2,16 +2,22 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Box, Text, ResponsiveContext } from 'grommet';
 import Hint from 'styled/Hint';
+import formatScoreMax from 'utils/format-score-max';
 
 import { COLUMNS } from 'containers/App/constants';
-import formatScoreMax from 'utils/format-score-max';
 import { isMinSize } from 'utils/responsive';
 import { getESRGradeForScore } from 'utils/scores';
 
 import DimensionTitle from './DimensionTitle';
 
 const DimensionScoreWrapper = props => (
-  <Box {...props} color="esrDark" background="light-2" pad="small" />
+  <Box
+    {...props}
+    color="esrDark"
+    pad={{ top: 'hair', bottom: 'xsmall' }}
+    fill="horizontal"
+    responsive={false}
+  />
 );
 
 const BarWrap = props => <Box direction="row" {...props} align="center" />;
@@ -37,7 +43,7 @@ const getDimensionValue = (data, benchmark) => {
   return false;
 };
 
-function DimensionGrade({ data, benchmark, standard }) {
+function DimensionGrade({ data, benchmark, standard, scoreWidth }) {
   if (!data) return null;
   const maxValue = data.type === 'cpr' ? 10 : 100;
   const dim = {
@@ -64,35 +70,57 @@ function DimensionGrade({ data, benchmark, standard }) {
             }}
             responsive={false}
           >
+            <Hint>
+              <Text size="xsmall">
+                <strong>Grade for category</strong>
+              </Text>
+            </Hint>
             <BarWrap>
-              <Box style={{ position: 'relative' }} responsive={false}>
+              <Box
+                style={{ position: 'relative' }}
+                responsive={false}
+                fill="horizontal"
+                pad={{ right: 'large' }}
+                direction="row"
+              >
                 <DimensionScoreWrapper>
-                  <Box direction="row">
+                  <Box
+                    direction="column"
+                    style={{
+                      textAlign: 'center',
+                      width: '20%',
+                    }}
+                  >
                     <Text
                       weight="bold"
-                      size={isMinSize(size, 'medium') ? 'large' : 'medium'}
+                      size={isMinSize(size, 'medium') ? 'xxlarge' : 'xlarge'}
                       color="esrDark"
                     >
                       {dim.value && getESRGradeForScore(dim.value)}
                       {!dim.value && 'N/A'}
                     </Text>
-                    <Text
-                      size={isMinSize(size, 'medium') ? 'large' : 'medium'}
-                      color="esrDark"
-                    >
-                      &nbsp;
-                      {dim.value && ` (${formatScoreMax(dim.value, maxValue)})`}
-                    </Text>
+                    <Text size="small">&nbsp;</Text>
                   </Box>
                 </DimensionScoreWrapper>
-                <Box direction="row">
+              </Box>
+              <Box
+                flex={{ shrink: 0 }}
+                width={scoreWidth}
+                style={{ marginTop: '-66px' }}
+              >
+                <Text size="xsmall">
                   <Hint>
-                    <Text size="xsmall">
-                      <strong>Grade</strong>
-                      &nbsp;(Score)
-                    </Text>
+                    <strong>Score</strong>
                   </Hint>
-                </Box>
+                </Text>
+                <Text
+                  weight="bold"
+                  size={isMinSize(size, 'medium') ? 'large' : 'medium'}
+                  color={`${data.key}Dark`}
+                >
+                  {dim.value && formatScoreMax(dim.value, maxValue)}
+                  {!dim.value && 'N/A'}
+                </Text>
               </Box>
             </BarWrap>
           </Box>
@@ -106,6 +134,7 @@ DimensionGrade.propTypes = {
   benchmark: PropTypes.object,
   standard: PropTypes.string,
   data: PropTypes.oneOfType([PropTypes.bool, PropTypes.object]),
+  scoreWidth: PropTypes.string,
 };
 
 export default DimensionGrade;

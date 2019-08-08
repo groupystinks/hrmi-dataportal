@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import styled from 'styled-components';
 import { Box, Text, ResponsiveContext } from 'grommet';
 import { FormattedMessage } from 'react-intl';
 
 import { COLUMNS } from 'containers/App/constants';
-import formatScoreMax from 'utils/format-score-max';
 
 import Hint from 'styled/Hint';
 import { isMinSize } from 'utils/responsive';
@@ -12,14 +12,18 @@ import { getESRGradeForScore } from 'utils/scores';
 import rootMessages from 'messages';
 
 import DimensionTitle from './DimensionTitle';
+import RightsScoreItem from './RightsScoreItem';
+
+const RightsScoresWrapperTable = styled.div`
+  display: table;
+  margin: -24px 0;
+`;
 
 const DimensionScoreWrapper = props => (
   <Box
     {...props}
     color="esrDark"
-    background="light-2"
-    pad={{ top: 'hair', bottom: 'xsmall', horizontal: 'small' }}
-    margin={{ right: '3px' }}
+    pad={{ top: 'hair', bottom: 'xsmall' }}
     responsive={false}
     fill="horizontal"
   />
@@ -80,6 +84,14 @@ function RightsChart({ data, standard, benchmark, scoreWidth }) {
             }}
             responsive={false}
           >
+            <Hint>
+              <Text size="xsmall">
+                <strong>
+                  {dataMultiple.data &&
+                    `Grades for ${dataMultiple.data.length} Rights`}
+                </strong>
+              </Text>
+            </Hint>
             <BarWrap>
               <Box
                 style={{ position: 'relative' }}
@@ -89,43 +101,64 @@ function RightsChart({ data, standard, benchmark, scoreWidth }) {
                 pad={{ right: 'medium' }}
               >
                 {dataMultiple.data &&
-                  dataMultiple.data.map(right => (
+                  dataMultiple.data.map((right, index) => (
                     <DimensionScoreWrapper>
-                      <Text size="small">
-                        <FormattedMessage
-                          {...rootMessages['rights-short'][right.key]}
-                        />
-                      </Text>
-                      <Box direction="row">
+                      <Box
+                        direction="column"
+                        style={{
+                          textAlign: 'center',
+                          borderRight: `1px solid ${
+                            index === dataMultiple.data.length - 1
+                              ? 'transparent'
+                              : 'lightGrey'
+                          }`,
+                        }}
+                      >
                         <Text
                           weight="bold"
-                          size={isMinSize(size, 'medium') ? 'large' : 'medium'}
+                          size={
+                            isMinSize(size, 'medium') ? 'xxlarge' : 'xlarge'
+                          }
                           color="esrDark"
                         >
                           {right.value && getESRGradeForScore(right.value)}
                           {!right.value && 'N/A'}
                         </Text>
-                        <Text
-                          size={isMinSize(size, 'medium') ? 'large' : 'medium'}
-                          color="esrDark"
-                        >
-                          &nbsp;
-                          {right.value && ` (${formatScoreMax(right.value)})`}
+                        <Text size="small">
+                          <FormattedMessage
+                            {...rootMessages['rights-short'][right.key]}
+                          />
                         </Text>
                       </Box>
                     </DimensionScoreWrapper>
                   ))}
               </Box>
-              <Box flex={{ shrink: 0 }} width={scoreWidth} />
+              <Box flex={{ shrink: 0 }} width={scoreWidth}>
+                <Box direction="row" style={{ margin: '-24px 0 24px' }}>
+                  <Text size="xsmall">
+                    <Hint>
+                      <strong>Grades</strong>
+                      &nbsp;(Scores)
+                    </Hint>
+                  </Text>
+                </Box>
+                <RightsScoresWrapperTable>
+                  {dataMultiple.data &&
+                    dataMultiple.data.map(right => (
+                      <RightsScoreItem
+                        key={right.key}
+                        dimensionKey={data.dimension}
+                        maxValue={dataMultiple.maxValue}
+                        right={{
+                          key: right.key,
+                          value: right.value,
+                          grade: getESRGradeForScore(right.value),
+                        }}
+                      />
+                    ))}
+                </RightsScoresWrapperTable>
+              </Box>
             </BarWrap>
-            <Box direction="row">
-              <Hint>
-                <Text size="xsmall">
-                  <strong>Grades</strong>
-                  &nbsp;(Scores)
-                </Text>
-              </Hint>
-            </Box>
           </Box>
         </>
       )}

@@ -128,6 +128,7 @@ function CountrySummaryChart({
                     grades={GRADES_ESR}
                     benchmark={currentBenchmark}
                     standard={standard}
+                    scoreWidth={isMinSize(size, 'medium') ? '200px' : '50px'}
                   />
                 )}
                 {scale === 'r' && (
