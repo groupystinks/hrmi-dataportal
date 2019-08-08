@@ -6,31 +6,12 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
-import { injectIntl, intlShape, FormattedMessage } from 'react-intl';
-
-import { Heading } from 'grommet';
 
 import CountryNarrative from 'components/CountryNarrative';
 import LoadingIndicator from 'components/LoadingIndicator';
 import MainColumn from 'styled/MainColumn';
 
-import { needsArticle, isPlural } from 'utils/narrative';
-
-import messages from './messages';
-
-// prettier-ignore
-const StyledHeading = styled(Heading)`
-  font-size: ${({ theme, level = 1 }) => theme.heading.level[level].small.size};
-  line-height: ${({ theme, level = 1 }) => theme.heading.level[level].small.height};
-  @media (min-width: ${({ theme }) => theme.breakpointsMin.large}) {
-    font-size: ${({ theme, level = 1 }) => theme.heading.level[level].medium.size};
-    line-height: ${({ theme, level = 1 }) => theme.heading.level[level].medium.height};
-  }
-`;
-
 function CountryReport({
-  countryTitle,
   dimensions,
   rights,
   benchmark,
@@ -38,7 +19,6 @@ function CountryReport({
   indicators,
   country,
   onMetricClick,
-  intl,
   atRiskData,
   onAtRiskClick,
   reference,
@@ -51,39 +31,26 @@ function CountryReport({
     <MainColumn hasAside={hasAside}>
       {!dataReady && <LoadingIndicator />}
       {dataReady && (
-        <>
-          <StyledHeading responsive={false} level={2}>
-            <FormattedMessage
-              {...messages.title}
-              values={{
-                country: countryTitle,
-                isPlural: isPlural(intl.locale, country.country_code),
-                needsArticle: needsArticle(intl.locale, country.country_code),
-              }}
-            />
-          </StyledHeading>
-          <CountryNarrative
-            dimensions={dimensions}
-            rights={rights}
-            indicators={indicators}
-            country={country}
-            benchmark={benchmark}
-            standard={standard}
-            onMetricClick={onMetricClick}
-            atRiskData={atRiskData}
-            onAtRiskClick={onAtRiskClick}
-            reference={reference}
-            year={year}
-            type={type}
-          />
-        </>
+        <CountryNarrative
+          dimensions={dimensions}
+          rights={rights}
+          indicators={indicators}
+          country={country}
+          benchmark={benchmark}
+          standard={standard}
+          onMetricClick={onMetricClick}
+          atRiskData={atRiskData}
+          onAtRiskClick={onAtRiskClick}
+          reference={reference}
+          year={year}
+          type={type}
+        />
       )}
     </MainColumn>
   );
 }
 
 CountryReport.propTypes = {
-  countryTitle: PropTypes.string,
   type: PropTypes.string,
   onMetricClick: PropTypes.func,
   onAtRiskClick: PropTypes.func,
@@ -96,9 +63,8 @@ CountryReport.propTypes = {
   country: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
   standard: PropTypes.oneOfType([PropTypes.bool, PropTypes.string]),
   benchmark: PropTypes.oneOfType([PropTypes.bool, PropTypes.string]),
-  intl: intlShape.isRequired,
   year: PropTypes.number,
   dataReady: PropTypes.bool,
 };
 
-export default injectIntl(CountryReport);
+export default CountryReport;

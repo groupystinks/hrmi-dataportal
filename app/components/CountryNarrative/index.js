@@ -42,16 +42,6 @@ const RightsTypeHeading = props => (
   />
 );
 
-const DimensionHeading = props => (
-  <Heading
-    responsive={false}
-    level={4}
-    margin={{ vertical: '5px' }}
-    {...props}
-  />
-);
-const StyledDimensionHeading = styled(DimensionHeading)``;
-
 // const isDefaultStandard = (standard, country) =>
 //   (standard === 'hi' && country.high_income_country === '1') ||
 //   (standard === 'core' && country.high_income_country === '0');
@@ -95,7 +85,6 @@ function CountryNarrative({
   standard,
   intl,
   reference,
-  year,
   type,
 }) {
   if (!dimensions || !rights || !indicators) {
@@ -112,25 +101,12 @@ function CountryNarrative({
       );
     })
     .reduce((m, s) => m || !!s.score, false);
-  console.log('atRiskData', atRiskData);
   return (
     <Styled>
       {type === 'cpr' && (
         <RightsType>
-          <RightsTypeHeading>
-            <FormattedMessage {...rootMessages['rights-types'].cpr} />
-            {` (${year})`}
-          </RightsTypeHeading>
           {dimensions.empowerment && dimensions.empowerment.score && (
             <Dimension>
-              <StyledDimensionHeading>
-                <FormattedMessage {...rootMessages.dimensions.empowerment} />
-              </StyledDimensionHeading>
-              <NarrativeCPR
-                dimensionKey="empowerment"
-                score={dimensions.empowerment && dimensions.empowerment.score}
-                country={country}
-              />
               <CPRAccordion
                 dimension={dimensions.empowerment}
                 rights={getRightsScoresForDimension(
@@ -140,22 +116,24 @@ function CountryNarrative({
                 )}
                 onMetricClick={onMetricClick}
               />
+              <NarrativeCPR
+                dimensionKey="empowerment"
+                score={dimensions.empowerment && dimensions.empowerment.score}
+                country={country}
+              />
             </Dimension>
           )}
           {dimensions.physint && dimensions.physint.score && (
             <Dimension>
-              <StyledDimensionHeading>
-                <FormattedMessage {...rootMessages.dimensions.physint} />
-              </StyledDimensionHeading>
-              <NarrativeCPR
-                dimensionKey="physint"
-                score={dimensions.physint && dimensions.physint.score}
-                country={country}
-              />
               <CPRAccordion
                 dimension={dimensions.physint}
                 rights={getRightsScoresForDimension(rights, 'physint', true)}
                 onMetricClick={onMetricClick}
+              />
+              <NarrativeCPR
+                dimensionKey="physint"
+                score={dimensions.physint && dimensions.physint.score}
+                country={country}
               />
             </Dimension>
           )}
@@ -164,21 +142,9 @@ function CountryNarrative({
       )}
       {type === 'esr' && (
         <RightsType>
-          <RightsTypeHeading>
-            <FormattedMessage {...rootMessages['rights-types'].esr} />
-            {` (${year})`}
-          </RightsTypeHeading>
           <Dimension>
-            <StyledDimensionHeading>
-              <FormattedMessage {...rootMessages.dimensions.esr} />
-            </StyledDimensionHeading>
             {getDefaultStandard(country) !== standard &&
               renderStandardHint(intl, standard, country)}
-            <NarrativeESR
-              score={dimensions.esr && dimensions.esr.score}
-              country={country}
-              someData={hasSomeIndicatorScores}
-            />
             <ESRAccordion
               dimension={dimensions.esr}
               rights={getRightsScoresForDimension(rights, 'esr')}
@@ -187,6 +153,11 @@ function CountryNarrative({
               onMetricClick={onMetricClick}
               standard={standard}
               hasAtRisk={hasCPR(dimensions)}
+            />
+            <NarrativeESR
+              score={dimensions.esr && dimensions.esr.score}
+              country={country}
+              someData={hasSomeIndicatorScores}
             />
           </Dimension>
         </RightsType>

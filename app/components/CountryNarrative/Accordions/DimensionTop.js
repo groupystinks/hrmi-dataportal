@@ -80,7 +80,7 @@ function DimensionTop({
     >
       <ButtonTextHeading onClick={() => onMetricClick(key)}>
         <PanelHeading level={4}>
-          <FormattedMessage {...rootMessages.dimensions[key]} />
+          <FormattedMessage {...rootMessages.dimensions[key]} /> Rights
           <Hidden min="medium">
             <FormNext size="large" />
           </Hidden>

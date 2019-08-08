@@ -180,6 +180,31 @@ export function PathCountry({
         <TabContainer
           tabs={[
             {
+              key: 'reportESR',
+              title: intl.formatMessage(rootMessages.tabs.reportESR),
+              content: props => (
+                <CountryReport
+                  {...props}
+                  countryTitle={countryTitle}
+                  dimensions={dimensions}
+                  rights={rights}
+                  indicators={indicators}
+                  country={country}
+                  benchmark={benchmark}
+                  atRiskData={atRisk}
+                  standard={standard}
+                  reference={dimensionAverages}
+                  onAtRiskClick={() => onAtRiskClick()}
+                  onMetricClick={(metric, tab) =>
+                    onMetricClick(countryCode, metric, tab)
+                  }
+                  year={esrYear}
+                  dataReady={dataReady}
+                  type="esr"
+                />
+              ),
+            },
+            {
               key: 'report',
               title: intl.formatMessage(rootMessages.tabs.report),
               content: props => (
@@ -202,31 +227,6 @@ export function PathCountry({
                   year={cprYear}
                   dataReady={dataReady}
                   type="cpr"
-                />
-              ),
-            },
-            {
-              key: 'reportESR',
-              title: intl.formatMessage(rootMessages.tabs.reportESR),
-              content: props => (
-                <CountryReport
-                  {...props}
-                  countryTitle={countryTitle}
-                  dimensions={dimensions}
-                  rights={rights}
-                  indicators={indicators}
-                  country={country}
-                  benchmark={benchmark}
-                  atRiskData={atRisk}
-                  standard={standard}
-                  reference={dimensionAverages}
-                  onAtRiskClick={() => onAtRiskClick()}
-                  onMetricClick={(metric, tab) =>
-                    onMetricClick(countryCode, metric, tab)
-                  }
-                  year={esrYear}
-                  dataReady={dataReady}
-                  type="esr"
                 />
               ),
             },
