@@ -103,7 +103,7 @@ export const showSettings = ({ route, match, tabIndex }) => {
     if (metricDetails && metricDetails.type === 'cpr') return false;
   }
   if (route === 'country') {
-    return tabIndex === 1;
+    return tabIndex === 0;
   }
   return true;
 };
