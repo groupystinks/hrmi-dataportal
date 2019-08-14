@@ -5,7 +5,6 @@ import { Box, ResponsiveContext } from 'grommet';
 import { COLUMNS } from 'containers/App/constants';
 
 import BarMultiple from 'components/Bars/BarMultiple';
-import AnnotateBetter from 'components/AnnotateBetterWorse';
 import { isMinSize } from 'utils/responsive';
 import DimensionTitle from './DimensionTitle';
 import RightsScoreItem from './RightsScoreItem';
@@ -13,14 +12,6 @@ import RightsScoreItem from './RightsScoreItem';
 const RightsScoresWrapperTable = styled.div`
   display: table;
   margin: -24px 0;
-`;
-
-const WrapAnnotateBetter = styled.div`
-  position: absolute;
-  left: ${({ theme }) => theme.global.edgeSize.medium};
-  right: ${({ theme }) => theme.global.edgeSize.large};
-  top: 100%;
-  margin-top: -4px;
 `;
 
 const getDimensionRefs = (score, standard, benchmark) => {
@@ -93,9 +84,6 @@ function RightsChart({ data, standard, benchmark, scoreWidth }) {
                   totalHeight={36}
                   annotateBenchmarkAbove={data.type === 'esr'}
                 />
-                <WrapAnnotateBetter>
-                  <AnnotateBetter absolute />
-                </WrapAnnotateBetter>
               </Box>
             </Box>
             <Box flex={{ shrink: 0 }} width={scoreWidth}>

@@ -1,11 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
 import { Box, Text, ResponsiveContext } from 'grommet';
 
 import Bar from 'components/Bars/Bar';
 import { COLUMNS } from 'containers/App/constants';
-import AnnotateBetter from 'components/AnnotateBetterWorse';
 import formatScoreMax from 'utils/format-score-max';
 import { isMinSize } from 'utils/responsive';
 
@@ -13,14 +11,6 @@ import DimensionTitle from './DimensionTitle';
 
 const DimensionScoreWrapper = props => <Box {...props} flex={{ shrink: 0 }} />;
 const BarWrap = props => <Box direction="row" {...props} align="center" />;
-
-const WrapAnnotateBetter = styled.div`
-  position: absolute;
-  left: ${({ theme }) => theme.global.edgeSize.medium};
-  right: ${({ theme }) => theme.global.edgeSize.large};
-  top: 100%;
-  margin-top: -4px;
-`;
 
 const getDimensionRefs = (score, benchmark) => {
   if (benchmark && benchmark.key === 'adjusted') {
@@ -83,9 +73,6 @@ function DimensionChart({ data, benchmark, standard, scoreWidth }) {
                   annotateBenchmarkAbove
                   showBenchmark
                 />
-                <WrapAnnotateBetter>
-                  <AnnotateBetter absolute />
-                </WrapAnnotateBetter>
               </Box>
               <DimensionScoreWrapper width={scoreWidth}>
                 <Text

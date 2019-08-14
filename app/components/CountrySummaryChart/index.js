@@ -24,9 +24,15 @@ import RightsChart from './RightsChart';
 
 const RightsType = styled(Box)`
   margin-bottom: 6px;
+  position: relative;
 `;
 const ChartArea = props => (
-  <Box direction="column" fill="horizontal" {...props} />
+  <Box
+    direction="column"
+    fill="horizontal"
+    style={{ position: 'relative' }}
+    {...props}
+  />
 );
 
 // prettier-ignore
@@ -47,6 +53,36 @@ const RightsTypeHeading = props => (
   />
 );
 
+const BGScale = styled.div`
+  position: absolute;
+  left: ${({ theme }) => theme.global.edgeSize.medium};
+  right: ${({ theme }) => theme.global.edgeSize.large};
+  margin-right: ${({ right }) => right};
+  top: 0;
+  bottom: 0;
+`;
+
+const BGScaleX = styled.div`
+  background: rgba(0, 0, 0, 0.04);
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  left: ${({ min }) => min}%;
+`;
+
+const BGScaleLabel = styled.span`
+  position: absolute;
+  bottom: 2px;
+  font-weight: 600;
+  font-size: 0.8em;
+  left: 3px;
+  opacity: 0.6;
+`;
+const BGScaleLabelTop = styled(BGScaleLabel)`
+  bottom: auto;
+  top: 2px;
+`;
 function CountrySummaryChart({
   dimensions,
   benchmark,
@@ -77,11 +113,28 @@ function CountrySummaryChart({
         >
           <Box direction="row">
             <ChartArea>
+              <RightsTypeHeading>
+                <FormattedMessage {...rootMessages['rights-types'].cpr} />
+                {` (${cprYear})`}
+              </RightsTypeHeading>
               <RightsType>
-                <RightsTypeHeading>
-                  <FormattedMessage {...rootMessages['rights-types'].cpr} />
-                  {` (${cprYear})`}
-                </RightsTypeHeading>
+                <BGScale right={isMinSize(size, 'medium') ? '200px' : '50px'}>
+                  <BGScaleX min="0">
+                    <BGScaleLabel>Very Poor</BGScaleLabel>
+                  </BGScaleX>
+                  <BGScaleX min="50">
+                    <BGScaleLabel>Poor</BGScaleLabel>
+                  </BGScaleX>
+                  <BGScaleX min="63.33">
+                    <BGScaleLabel>Fair</BGScaleLabel>
+                  </BGScaleX>
+                  <BGScaleX min="76.66">
+                    <BGScaleLabel>Good</BGScaleLabel>
+                  </BGScaleX>
+                  <BGScaleX min="90">
+                    <BGScaleLabel>Excellent</BGScaleLabel>
+                  </BGScaleX>
+                </BGScale>
                 {scale === 'd' && (
                   <DimensionChart
                     data={dimensions && dimensions.empowerment}
@@ -115,11 +168,21 @@ function CountrySummaryChart({
                   />
                 )}
               </RightsType>
-              <RightsType>
-                <RightsTypeHeading>
-                  <FormattedMessage {...rootMessages['rights-types'].esr} />
-                  {` (${esrYear})`}
-                </RightsTypeHeading>
+              <RightsType pad={{ top: 'medium' }} margin={{ top: 'medium' }}>
+                <BGScale right={isMinSize(size, 'medium') ? '200px' : '50px'}>
+                  <BGScaleX min="0">
+                    <BGScaleLabelTop>Very Poor</BGScaleLabelTop>
+                  </BGScaleX>
+                  <BGScaleX min="75">
+                    <BGScaleLabelTop>Poor</BGScaleLabelTop>
+                  </BGScaleX>
+                  <BGScaleX min="85">
+                    <BGScaleLabelTop>Fair</BGScaleLabelTop>
+                  </BGScaleX>
+                  <BGScaleX min="95">
+                    <BGScaleLabelTop>Good</BGScaleLabelTop>
+                  </BGScaleX>
+                </BGScale>
                 {scale === 'd' && (
                   <DimensionChart
                     data={dimensions && dimensions.esr}
@@ -141,6 +204,10 @@ function CountrySummaryChart({
                   />
                 )}
               </RightsType>
+              <RightsTypeHeading>
+                <FormattedMessage {...rootMessages['rights-types'].esr} />
+                {` (${esrYear})`}
+              </RightsTypeHeading>
               <Box pad={{ top: 'xsmall' }}>
                 <ScaleToggle />
               </Box>

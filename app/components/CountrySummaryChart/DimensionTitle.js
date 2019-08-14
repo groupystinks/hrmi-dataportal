@@ -22,6 +22,7 @@ const StyledDimensionHeading = styled(DimensionHeading)`
 const Styled = styled(Box)`
   position: relative;
   z-index: 1;
+  margin-left: ${({ theme }) => theme.global.edgeSize.medium};
 `;
 
 function DimensionTitle({ dimensionKey }) {
