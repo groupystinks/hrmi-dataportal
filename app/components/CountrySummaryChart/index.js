@@ -64,6 +64,7 @@ const BGScale = styled.div`
 
 const BGScaleX = styled.div`
   background: rgba(0, 0, 0, 0.04);
+  /* border-left: 1px solid rgba(0, 0, 0, 0.2); */
   position: absolute;
   right: 0;
   top: 0;
