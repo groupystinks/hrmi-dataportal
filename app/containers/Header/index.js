@@ -261,22 +261,34 @@ export function Header({
               {appLocales.length > 1 && isMinSize(size, 'large') && (
                 <LocaleToggle />
               )}
-              <span>
+              <>
                 {PAGES &&
-                  PAGES.map(page => (
-                    <ButtonNavPrimary
-                      key={page}
-                      active={page === match}
-                      disabled={page === match}
-                      onClick={() => {
-                        setShowMenu(false);
-                        nav(`page/${page}`);
-                      }}
-                    >
-                      <FormattedMessage {...rootMessages.page[page]} />
-                    </ButtonNavPrimary>
-                  ))}
-              </span>
+                  PAGES.map(page =>
+                    typeof page.url !== 'undefined' ? (
+                      <ButtonNavPrimary
+                        key={page.key}
+                        onClick={() => {
+                          setShowMenu(false);
+                          window.open(page.url, '_blank');
+                        }}
+                      >
+                        <FormattedMessage {...rootMessages.page[page.key]} />
+                      </ButtonNavPrimary>
+                    ) : (
+                      <ButtonNavPrimary
+                        key={page}
+                        active={page === match}
+                        disabled={page === match}
+                        onClick={() => {
+                          setShowMenu(false);
+                          nav(`page/${page}`);
+                        }}
+                      >
+                        <FormattedMessage {...rootMessages.page[page]} />
+                      </ButtonNavPrimary>
+                    ),
+                  )}
+              </>
               <ButtonNavPrimaryDrop
                 ref={downloadRef}
                 active={showDownload}

@@ -91,7 +91,16 @@ export const LANGUAGES = {
 export const DATA_URL = '//data-store.humanrightsmeasurement.org/data';
 export const PAGES_URL = '//content-store.humanrightsmeasurement.org/';
 
-export const PAGES = ['about', 'methodology'];
+export const PAGES = [
+  {
+    key: 'about',
+    url: '//humanrightsmeasurement.org/about-hrmi/our-purpose/',
+  },
+  {
+    key: 'methodology',
+    url: '//humanrightsmeasurement.org/methodology/overview/',
+  },
+];
 
 // countries: country lookup table
 // esrIndicators: ESR indicator lookup table
