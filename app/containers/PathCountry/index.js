@@ -45,6 +45,7 @@ import {
   getESRYear,
   getCPRYear,
   getDependenciesReady,
+  getRawSearch,
 } from 'containers/App/selectors';
 
 import {
@@ -52,6 +53,7 @@ import {
   navigate,
   setTab,
   trackEvent,
+  setRaw,
 } from 'containers/App/actions';
 
 import { INCOME_GROUPS } from 'containers/App/constants';
@@ -96,6 +98,8 @@ export function PathCountry({
   cprYear,
   dataReady,
   onTrackEvent,
+  onRawChange,
+  raw,
 }) {
   // const layerRef = useRef();
   useInjectSaga({ key: 'app', saga });
@@ -218,6 +222,8 @@ export function PathCountry({
                   cprYear={cprYear}
                   dataReady={dataReady}
                   trackEvent={onTrackEvent}
+                  onRawChange={onRawChange}
+                  raw={raw}
                 />
               ),
             },
@@ -250,7 +256,10 @@ export function PathCountry({
                   currentGDP={currentGDP}
                   onCategoryClick={onCategoryClick}
                   showFAQs={
-                    props && (props.activeTab === 0 || props.activeTab === 2)
+                    props &&
+                    (props.activeTab === '0' ||
+                      props.activeTab === 'report' ||
+                      props.activeTab === 'about')
                   }
                 />
               ),
@@ -288,6 +297,8 @@ PathCountry.propTypes = {
   esrYear: PropTypes.number,
   cprYear: PropTypes.number,
   dataReady: PropTypes.bool,
+  onRawChange: PropTypes.func,
+  raw: PropTypes.bool,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -307,6 +318,7 @@ const mapStateToProps = createStructuredSelector({
   benchmark: state => getBenchmarkSearch(state),
   esrYear: state => getESRYear(state),
   cprYear: state => getCPRYear(state),
+  raw: state => getRawSearch(state),
   dimensionAverages: state => getDimensionAverages(state),
   currentGDP: (state, { match }) =>
     getCountryCurrentGDP(state, match.params.country),
@@ -318,6 +330,9 @@ export function mapDispatchToProps(dispatch) {
   return {
     onLoadData: () => {
       DEPENDENCIES.forEach(key => dispatch(loadDataIfNeeded(key)));
+    },
+    onRawChange: value => {
+      dispatch(setRaw(value));
     },
     onCategoryClick: (key, value) => {
       const deleteParams = ['income', 'region', 'assessed'];
@@ -337,7 +352,7 @@ export function mapDispatchToProps(dispatch) {
       );
     },
     onClose: () => dispatch(navigate('')),
-    onMetricClick: (country, metric, tab = 0) =>
+    onMetricClick: (country, metric, tab = '0') =>
       dispatch(
         navigate(
           {
