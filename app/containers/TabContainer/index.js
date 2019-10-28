@@ -50,7 +50,6 @@ function TabContainer({
         // tabs in main column if small or more than 2 tabs
         const tabsWithContent = tabs.filter(t => t.content && t.content());
         const hasAside =
-          !modal &&
           isMinSize(size, 'large') &&
           aside &&
           tabsWithContent.length > 1;

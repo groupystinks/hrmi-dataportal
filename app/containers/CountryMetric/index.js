@@ -254,6 +254,7 @@ export function CountryMetric({
       </ContentContainer>
       <ContentMaxWidth>
         <TabContainer
+          modal
           tabs={[
             {
               key: 'atrisk',
