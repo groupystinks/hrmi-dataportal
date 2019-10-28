@@ -37,6 +37,7 @@ import SettingsMultiToggle from 'containers/Settings/SettingsMultiToggle';
 
 import ButtonToggleValueSetting from 'styled/ButtonToggleValueSetting';
 import WrapPlot from 'styled/WrapPlot';
+import MainColumn from 'styled/MainColumn';
 
 import rootMessages from 'messages';
 
@@ -137,6 +138,7 @@ function MetricTrend({
   metric,
   onGroupToggle,
   groupsActive,
+  hasAside,
 }) {
   const [highlight, setHighlight] = useState(false);
   const [highlightFemale, setHighlightFemale] = useState(false);
@@ -246,7 +248,7 @@ function MetricTrend({
   return (
     <ResponsiveContext.Consumer>
       {size => (
-        <Box direction="column" pad={{ vertical: 'medium' }}>
+        <MainColumn hasAside={hasAside}>
           <WrapPlot>
             <FlexibleWidthXYPlot
               height={size !== 'small' ? 320 : 240}
@@ -553,7 +555,7 @@ function MetricTrend({
             </Settings>
           )}
           <Source center />
-        </Box>
+        </MainColumn>
       )}
     </ResponsiveContext.Consumer>
   );
@@ -581,6 +583,7 @@ MetricTrend.propTypes = {
   onGroupsChange: PropTypes.func,
   onGroupToggle: PropTypes.func,
   onSetBenchmark: PropTypes.func,
+  hasAside: PropTypes.bool,
   onSetStandard: PropTypes.func,
   groupsActive: PropTypes.array,
 };

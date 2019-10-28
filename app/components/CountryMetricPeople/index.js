@@ -16,10 +16,9 @@ import HTMLWrapper from 'components/HTMLWrapper';
 import Loading from 'components/LoadingIndicator';
 import WordCloud from 'components/WordCloud';
 import Hint from 'styled/Hint';
+import MainColumn from 'styled/MainColumn';
 
 import messages from './messages';
-
-const Styled = styled(Box)``;
 
 const RightHeading = props => (
   <Heading
@@ -57,9 +56,10 @@ function CountryMetricPeople({
   intl,
   hasAnalysis,
   hasSubrightAnalysis,
+  hasAside,
 }) {
   return (
-    <Styled pad="medium" direction="column">
+    <MainColumn hasAside={hasAside}>
       {metric.metricType === 'rights' && (
         <Box>
           <Paragraph>
@@ -113,11 +113,12 @@ function CountryMetricPeople({
       {hasAnalysis &&
         !hasSubrightAnalysis &&
         renderAnalysis(atRiskAnalysis, intl)}
-    </Styled>
+    </MainColumn>
   );
 }
 
 CountryMetricPeople.propTypes = {
+  hasAside: PropTypes.bool,
   hasAnalysis: PropTypes.bool,
   hasSubrightAnalysis: PropTypes.bool,
   metric: PropTypes.object,

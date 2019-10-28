@@ -131,11 +131,8 @@ export function PathCountry({
         <ResponsiveContext.Consumer>
           {size => (
             <Layer
-              full="vertical"
-              margin={{
-                top: isMinSize(size, 'xlarge') ? 'large' : 'small',
-                bottom: 'ms',
-              }}
+              full
+              margin={isMinSize(size, 'xlarge') ? 'ms' : 'small'}
               onEsc={onCloseLayer}
               onClickOutside={onCloseLayer}
               animate={false}

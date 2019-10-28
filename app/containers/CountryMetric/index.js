@@ -23,18 +23,14 @@ import CountryMetricGroups from 'components/CountryMetricGroups';
 import CountryMetricPeople from 'components/CountryMetricPeople';
 import CountryAbout from 'components/CountryAbout';
 import MetricTrend from 'components/MetricTrend';
-import MetricAbout from 'components/MetricAbout';
+import MetricAside from 'containers/MetricAside';
 import Close from 'containers/Close';
 import TabContainer from 'containers/TabContainer';
 import ButtonText from 'styled/ButtonText';
 
-import {
-  RIGHTS,
-  STANDARDS,
-  BENCHMARKS,
-  COLUMNS,
-} from 'containers/App/constants';
+import { RIGHTS, BENCHMARKS, COLUMNS } from 'containers/App/constants';
 import ContentContainer from 'styled/ContentContainer';
+import ContentMaxWidth from 'styled/ContentMaxWidth';
 
 import getMetricDetails from 'utils/metric-details';
 
@@ -51,7 +47,6 @@ import {
   getESRIndicatorScoresForCountry,
   getHasCountryCPR,
   getAuxIndicatorsForCountry,
-  getIndicatorInfo,
   getMaxYearESR,
   getMaxYearCPR,
   getMinYearESR,
@@ -61,6 +56,7 @@ import {
   getRawSearch,
   getGroupsSearch,
   getActiveGroupsSearch,
+  getIndicatorInfo,
 } from 'containers/App/selectors';
 
 import {
@@ -90,22 +86,6 @@ const StyledPageTitle = styled(PageTitle)`
 `;
 
 const StyledButtonText = styled(ButtonText)``;
-
-const StyledContent = styled(Box)`
-  margin: 0 auto;
-  width: 1200px;
-  max-width: 100%;
-  position: relative;
-  min-height: auto;
-  padding: 0 ${({ theme }) => theme.global.edgeSize.small};
-  @media (min-width: ${({ theme }) => theme.breakpointsMin.large}) {
-    padding: 0 ${({ theme }) => theme.global.edgeSize.large};
-  }
-`;
-
-const Content = props => (
-  <StyledContent direction="row" responsive={false} {...props} />
-);
 
 const TitleWrap = styled(Box)`
   padding-top: ${({ theme }) => theme.global.edgeSize.small};
@@ -188,7 +168,6 @@ export function CountryMetric({
   auxIndicators,
   country,
   onLoadData,
-  metricInfo,
   benchmark,
   standard,
   maxYearESR,
@@ -205,6 +184,8 @@ export function CountryMetric({
   onGroupsChange,
   onGroupToggle,
   activeGroups,
+  onMetricChangeForCountry,
+  metricInfo,
 }) {
   const layerRef = useRef();
   useInjectSaga({ key: 'app', saga });
@@ -241,6 +222,30 @@ export function CountryMetric({
     );
   }
 
+  const ancestors = [{ key: 'all' }];
+
+  if (metric.metricType === 'rights') {
+    ancestors.push({
+      type: 'dimensions',
+      key: metric.dimension,
+    });
+    if (metric.aggregate) {
+      ancestors.push({
+        type: 'rights-short',
+        key: metric.aggregate,
+      });
+    }
+  }
+  if (metric.metricType === 'indicators') {
+    ancestors.push({
+      type: 'dimensions',
+      key: 'esr',
+    });
+    ancestors.push({
+      type: 'rights-short',
+      key: metric.right,
+    });
+  }
   // prettier-ignore
   return (
     <Box overflow="auto" direction="column" ref={layerRef}>
@@ -249,7 +254,7 @@ export function CountryMetric({
         <meta name="description" content="Description of Country Metric page" />
       </Helmet>
       <ContentContainer direction="column" header>
-        <Content>
+        <ContentMaxWidth>
           <Close
             topRight
             float={false}
@@ -276,12 +281,10 @@ export function CountryMetric({
               </StyledPageTitle>
             </StyledButtonText>
           </TitleWrap>
-        </Content>
+        </ContentMaxWidth>
       </ContentContainer>
-      <Content>
+      <ContentMaxWidth>
         <TabContainer
-          aside={false}
-          modal
           tabs={[
             {
               key: 'atrisk',
@@ -402,7 +405,8 @@ export function CountryMetric({
               content: props => (
                 <>
                   {country &&
-                  auxIndicators && (
+                  auxIndicators &&
+                  base === 'metric' && (
                     <CountryAbout
                       country={country}
                       auxIndicators={auxIndicators}
@@ -410,14 +414,11 @@ export function CountryMetric({
                       {...props}
                     />
                   )}
-                  <MetricAbout
+                  <MetricAside
                     metric={metric}
-                    metricInfo={metricInfo}
-                    fullInfo
-                    standard={
-                      metric.metricType === 'indicators'
-                        ? STANDARDS.find(s => metricInfo.standard === s.code)
-                        : null
+                    ancestors={ancestors}
+                    onSelectMetric={newMetric =>
+                      onMetricChangeForCountry(newMetric, countryCode, base)
                     }
                     {...props}
                   />
@@ -426,7 +427,7 @@ export function CountryMetric({
             },
           ]}
         />
-      </Content>
+      </ContentMaxWidth>
     </Box>
   );
 }
@@ -435,6 +436,7 @@ CountryMetric.propTypes = {
   intl: intlShape.isRequired,
   onClose: PropTypes.func,
   onSelectMetric: PropTypes.func,
+  onMetricChangeForCountry: PropTypes.func,
   onSetStandard: PropTypes.func,
   onSetBenchmark: PropTypes.func,
   onLoadContent: PropTypes.func,
@@ -461,7 +463,6 @@ CountryMetric.propTypes = {
   scores: PropTypes.oneOfType([PropTypes.array, PropTypes.bool]),
   auxIndicators: PropTypes.oneOfType([PropTypes.bool, PropTypes.object]),
   country: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
-  metricInfo: PropTypes.oneOfType([PropTypes.bool, PropTypes.object]),
   theme: PropTypes.object,
   raw: PropTypes.bool,
   onRawChange: PropTypes.func,
@@ -469,6 +470,7 @@ CountryMetric.propTypes = {
   onGroupsChange: PropTypes.func,
   onGroupToggle: PropTypes.func,
   activeGroups: PropTypes.array,
+  metricInfo: PropTypes.object,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -586,6 +588,7 @@ export function mapDispatchToProps(dispatch) {
     },
     onSelectCountry: country => dispatch(selectCountry(country)),
     onSelectMetric: metric => dispatch(selectMetric(metric)),
+    // metric on modal
     onSetStandard: value => dispatch(setStandard(value)),
     onSetBenchmark: value => dispatch(setBenchmark(value)),
     onRawChange: value => {
@@ -613,6 +616,43 @@ export function mapDispatchToProps(dispatch) {
           },
         ),
       ),
+    onMetricChangeForCountry: (metric, country, base) => {
+      if (base === 'metric') {
+        dispatch(
+          navigate(
+            {
+              pathname: `/metric/${metric}/${country}`,
+            },
+            {
+              replace: false,
+              keepTab: true,
+              trackEvent: {
+                category: 'Modal',
+                action: 'Metric-country',
+                value: `${metric}/${country}`,
+              },
+            },
+          ),
+        );
+      } else {
+        dispatch(
+          navigate(
+            {
+              pathname: `/country/${country}/${metric}`,
+            },
+            {
+              replace: false,
+              keepTab: true,
+              trackEvent: {
+                category: 'Modal',
+                action: 'Country-metric',
+                value: `${country}/${metric}`,
+              },
+            },
+          ),
+        );
+      }
+    },
   };
 }
 const withConnect = connect(
