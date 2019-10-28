@@ -23,7 +23,7 @@ import {
   getESRIndicators,
   getBenchmarkSearch,
 } from 'containers/App/selectors';
-import { loadDataIfNeeded, selectMetric } from 'containers/App/actions';
+import { loadDataIfNeeded } from 'containers/App/actions';
 import Button from 'styled/Button';
 import { useInjectSaga } from 'utils/injectSaga';
 import saga from 'containers/App/saga';
@@ -299,7 +299,6 @@ export function mapDispatchToProps(dispatch) {
       }
       return false;
     },
-    onSelectMetric: metric => dispatch(selectMetric(metric)),
   };
 }
 

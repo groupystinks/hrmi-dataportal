@@ -78,14 +78,11 @@ export function PathMetric({
         <ResponsiveContext.Consumer>
           {size => (
             <Layer
-              animate={false}
-              full="vertical"
-              margin={{
-                top: isMinSize(size, 'xlarge') ? 'large' : 'small',
-                bottom: 'ms',
-              }}
+              full
+              margin={isMinSize(size, 'xlarge') ? 'ms' : 'small'}
               onEsc={() => onCloseMetricOverlay(metricCode)}
               onClickOutside={() => onCloseMetricOverlay(metricCode)}
+              animate={false}
             >
               <CountryMetric
                 metricCode={metricCode}
@@ -133,7 +130,12 @@ export function PathMetric({
               key: 'about',
               title: intl.formatMessage(rootMessages.tabs.about),
               content: props => (
-                <MetricAside {...props} metric={metric} ancestors={ancestors} />
+                <MetricAside
+                  {...props}
+                  metric={metric}
+                  ancestors={ancestors}
+                  onSelectMetric={onMetricClick}
+                />
               ),
             },
           ]}

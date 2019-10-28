@@ -33,6 +33,7 @@ import {
 import SettingsToggle from 'containers/Settings/SettingsToggle';
 
 import WrapPlot from 'styled/WrapPlot';
+import MainColumn from 'styled/MainColumn';
 
 const PlotHint = styled.div`
   color: ${({ color }) => color};
@@ -85,6 +86,7 @@ function MetricTrend({
   hasStandardOption,
   onSetBenchmark,
   onSetStandard,
+  hasAside,
 }) {
   const [highlight, setHighlight] = useState(false);
   if (!maxYear) return null;
@@ -140,7 +142,7 @@ function MetricTrend({
   return (
     <ResponsiveContext.Consumer>
       {size => (
-        <Box direction="column" pad={{ vertical: 'medium' }}>
+        <MainColumn hasAside={hasAside}>
           <WrapPlot>
             <FlexibleWidthXYPlot
               height={size !== 'small' ? 320 : 240}
@@ -270,7 +272,7 @@ function MetricTrend({
               )}
             </Box>
           )}
-        </Box>
+        </MainColumn>
       )}
     </ResponsiveContext.Consumer>
   );
@@ -290,6 +292,7 @@ MetricTrend.propTypes = {
   standard: PropTypes.string,
   hasBenchmarkOption: PropTypes.bool,
   hasStandardOption: PropTypes.bool,
+  hasAside: PropTypes.bool,
   onSetBenchmark: PropTypes.func,
   onSetStandard: PropTypes.func,
 };
