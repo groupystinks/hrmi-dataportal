@@ -471,7 +471,7 @@ CountryMetric.propTypes = {
   onGroupsChange: PropTypes.func,
   onGroupToggle: PropTypes.func,
   activeGroups: PropTypes.array,
-  metricInfo: PropTypes.object,
+  metricInfo: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
 };
 
 const mapStateToProps = createStructuredSelector({
