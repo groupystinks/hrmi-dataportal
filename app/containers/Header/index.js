@@ -34,7 +34,6 @@ import { getRouterMatch } from 'containers/App/selectors';
 import ContentContainer from 'styled/ContentContainer';
 import ButtonNavPrimary from 'styled/ButtonNavPrimary';
 import { isMinSize, isMaxSize } from 'utils/responsive';
-import ButtonNavPrimaryDrop from 'styled/ButtonNavPrimaryDrop';
 import ButtonHighlight from 'styled/ButtonHighlight';
 
 import Icon from 'components/Icon';
@@ -140,13 +139,20 @@ const MenuList = styled.div`
     top: auto;
     left: auto;
     right: auto;
+    bottom: auto;
     width: auto;
     height: 44px;
     background: transparent;
-    display: flex;
-    flex-direction: row;
+    display: table;
     margin: 0 0 0 auto;
-    align-items: center;
+  }
+`;
+
+const MenuGroup = styled.div`
+  vertical-align: top;
+  @media (min-width: ${({ theme }) => theme.breakpointsMin.large}) {
+    display: table-cell;
+    height: 44px;
   }
 `;
 // prettier-ignore
@@ -185,6 +191,38 @@ const SecondaryDropButton = styled(Button)`
     width: auto;
   }
 `;
+// prettier-ignore
+const PrimaryDropButton = styled(Button)`
+  padding: 10px 24px;
+  background-color: ${({ theme, active }) => active ? theme.global.colors['dark-3'] : 'transparent' };
+  border-top: 1px solid;
+  border-bottom: 1px solid;
+  border-color: ${({ theme }) => theme.global.colors['light-4']};
+  background-color: ${({ theme, active }) => active ? theme.global.colors['light-3'] : 'transparent' };
+  display: block;
+  width: 100%;
+  text-align: center;
+  @media (min-width: ${({ theme }) => theme.breakpointsMin.large}) {
+    display: inline-block;
+    height: 44px;
+    padding: 5px 10px;
+    border: none;
+    width: auto;
+  }
+  &:hover {
+    background-color: ${({ theme}) => theme.global.colors['dark-3']};
+  }
+  &:active {
+    background-color: ${({ theme }) => theme.global.colors['dark-3']};
+  }
+  &:visited {
+    background-color: ${({ theme }) => theme.global.colors['dark-3']};
+  }
+  &:focus {
+    background-color: ${({ theme }) => theme.global.colors['dark-3']};
+  }
+`;
+
 const DEPENDENCIES = ['countries'];
 
 const renderDownload = (intl, isFullWidth, downloadClicked) => (
@@ -266,9 +304,11 @@ export function Header({
             </ToggleMenu>
             <MenuList visible={showMenu}>
               {appLocales.length > 1 && isMinSize(size, 'large') && (
-                <LocaleToggle />
+                <MenuGroup>
+                  <LocaleToggle />
+                </MenuGroup>
               )}
-              <span>
+              <MenuGroup>
                 {PAGES &&
                   PAGES.map(page => (
                     <ButtonNavPrimary
@@ -283,18 +323,21 @@ export function Header({
                       <FormattedMessage {...rootMessages.page[page]} />
                     </ButtonNavPrimary>
                   ))}
-              </span>
-              <ButtonNavPrimaryDrop
-                ref={downloadRef}
-                active={showDownload}
-                onClick={() => {
-                  setShowDownload(!showDownload);
-                }}
-              >
-                <FormattedMessage {...messages.download.button} />
-                {showDownload && <FormUp />}
-                {!showDownload && <FormDown />}
-              </ButtonNavPrimaryDrop>
+              </MenuGroup>
+              <MenuGroup>
+                <PrimaryDropButton
+                  plain
+                  reverse
+                  gap="xxsmall"
+                  ref={downloadRef}
+                  active={showDownload}
+                  onClick={() => {
+                    setShowDownload(!showDownload);
+                  }}
+                  icon={showDownload ? <FormUp /> : <FormDown />}
+                  label={intl.formatMessage(messages.download.button)}
+                />
+              </MenuGroup>
               {showDownload && isMinSize(size, 'large') && (
                 <Drop
                   align={{ top: 'bottom', right: 'right' }}
@@ -342,6 +385,7 @@ export function Header({
                 align={{ top: 'bottom', left: 'left' }}
                 target={countryTarget.current}
                 onClickOutside={() => setShowCountries(false)}
+                overflow="hidden"
               >
                 <NavCountry
                   onClose={() => setShowCountries(false)}
