@@ -143,6 +143,7 @@ export function MetricAside({
         metric={metric}
         metricInfo={metricInfo}
         standard={standard}
+        aside
       />
       <Box
         direction="column"

@@ -12,39 +12,53 @@ import styled from 'styled-components';
 import { STANDARDS } from 'containers/App/constants';
 import ReadMore from 'components/ReadMore';
 import UL from 'styled/UL';
-import WrapAsideTop from 'styled/WrapAsideTop';
 import rootMessages from 'messages';
 import messages from './messages';
 
 const StyledUL = styled(UL)`
   margin-top: 0;
 `;
-function MetricAbout({ metric, metricInfo, standard, intl, fullInfo }) {
+function MetricAbout({
+  metric,
+  metricInfo,
+  standard,
+  intl,
+  fullInfo,
+  title,
+  aside,
+}) {
   const { metricType } = metric;
   return (
     <Box
       direction="column"
-      pad={{ left: 'medium', top: 'small', bottom: 'medium' }}
+      pad={{
+        horizontal: aside ? 'medium' : 'small',
+        bottom: 'medium',
+        top: 'small',
+      }}
     >
-      <WrapAsideTop>
-        <Heading responsive={false} level={5} margin={{ vertical: 'xsmall' }}>
-          <FormattedMessage {...messages.title[metricType]} />
-        </Heading>
-        {rootMessages[`${metricType}-about`] && fullInfo && (
-          <div>
-            <FormattedMessage
-              {...rootMessages[`${metricType}-about`][metric.key]}
-            />
-          </div>
-        )}
-        {rootMessages[`${metricType}-about`] && !fullInfo && (
-          <ReadMore
-            message={intl.formatMessage(
-              rootMessages[`${metricType}-about`][metric.key],
-            )}
+      <Heading
+        responsive={false}
+        level={aside ? 5 : 3}
+        margin={{ vertical: 'xsmall' }}
+      >
+        {title}
+        {!title && <FormattedMessage {...messages.title[metricType]} />}
+      </Heading>
+      {rootMessages[`${metricType}-about`] && fullInfo && (
+        <div>
+          <FormattedMessage
+            {...rootMessages[`${metricType}-about`][metric.key]}
           />
-        )}
-      </WrapAsideTop>
+        </div>
+      )}
+      {rootMessages[`${metricType}-about`] && !fullInfo && (
+        <ReadMore
+          message={intl.formatMessage(
+            rootMessages[`${metricType}-about`][metric.key],
+          )}
+        />
+      )}
       {metricType === 'indicators' && metricInfo && (
         <>
           <Box>
@@ -106,7 +120,9 @@ MetricAbout.propTypes = {
   metric: PropTypes.object,
   metricInfo: PropTypes.oneOfType([PropTypes.bool, PropTypes.object]),
   fullInfo: PropTypes.bool,
+  aside: PropTypes.bool,
   standard: PropTypes.object,
+  title: PropTypes.string,
   intl: intlShape.isRequired,
 };
 
