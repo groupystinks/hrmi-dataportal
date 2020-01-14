@@ -10,6 +10,7 @@ import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
 import { Heading, Box } from 'grommet';
 import styled from 'styled-components';
 import { STANDARDS } from 'containers/App/constants';
+import MetricSources from 'containers/MetricSources';
 import ReadMore from 'components/ReadMore';
 import UL from 'styled/UL';
 import rootMessages from 'messages';
@@ -26,6 +27,7 @@ function MetricAbout({
   fullInfo,
   title,
   aside,
+  onSelectMetric,
 }) {
   const { metricType } = metric;
   return (
@@ -59,58 +61,48 @@ function MetricAbout({
           )}
         />
       )}
+      {metricType !== 'indicators' && !aside && (
+        <Box>
+          <MetricSources
+            metric={metric}
+            indicatorInfo={metricInfo}
+            onSelectMetric={onSelectMetric}
+          />
+        </Box>
+      )}
       {metricType === 'indicators' && metricInfo && (
-        <>
+        <Box margin={{ top: 'medium' }}>
+          <Heading responsive={false} level={5} margin={{ vertical: 'xsmall' }}>
+            <FormattedMessage {...messages.titleStandards} />
+          </Heading>
           <Box>
-            <Heading
-              responsive={false}
-              level={5}
-              margin={{ vertical: 'xsmall' }}
-            >
-              <FormattedMessage {...messages.titleSource} />
-            </Heading>
-            <Box>
+            {metricInfo.standard === 'Both' && (
               <StyledUL>
-                {metricInfo.source.split(',').map(source => (
-                  <li key={source}>
-                    <FormattedMessage {...rootMessages.sources[source]} />
+                {STANDARDS.map(s => (
+                  <li key={s.key}>
+                    <FormattedMessage
+                      {...rootMessages.settings.standard[s.key]}
+                    />
                   </li>
                 ))}
               </StyledUL>
-            </Box>
+            )}
+            {metricInfo.standard !== 'Both' && standard && (
+              <StyledUL>
+                <li>
+                  <FormattedMessage
+                    {...rootMessages.settings.standard[standard.key]}
+                  />
+                </li>
+              </StyledUL>
+            )}
+            <MetricSources
+              metric={metric}
+              indicatorInfo={metricInfo}
+              onSelectMetric={onSelectMetric}
+            />
           </Box>
-          <Box>
-            <Heading
-              responsive={false}
-              level={5}
-              margin={{ vertical: 'xsmall' }}
-            >
-              <FormattedMessage {...messages.titleStandards} />
-            </Heading>
-            <Box>
-              {metricInfo.standard === 'Both' && (
-                <StyledUL>
-                  {STANDARDS.map(s => (
-                    <li key={s.key}>
-                      <FormattedMessage
-                        {...rootMessages.settings.standard[s.key]}
-                      />
-                    </li>
-                  ))}
-                </StyledUL>
-              )}
-              {metricInfo.standard !== 'Both' && standard && (
-                <StyledUL>
-                  <li>
-                    <FormattedMessage
-                      {...rootMessages.settings.standard[standard.key]}
-                    />
-                  </li>
-                </StyledUL>
-              )}
-            </Box>
-          </Box>
-        </>
+        </Box>
       )}
     </Box>
   );
@@ -124,6 +116,7 @@ MetricAbout.propTypes = {
   standard: PropTypes.object,
   title: PropTypes.string,
   intl: intlShape.isRequired,
+  onSelectMetric: PropTypes.func,
 };
 
 export default injectIntl(MetricAbout);

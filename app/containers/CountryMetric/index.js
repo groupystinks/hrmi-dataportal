@@ -374,10 +374,13 @@ export function CountryMetric({
                     title={`${intl.formatMessage(rootMessages.tabs.about)}: ${metricTitle}`}
                     metric={metric}
                     metricInfo={metricInfo}
+                    onSelectMetric={onSelectMetric}
                     fullInfo
                     standard={
                       metric.metricType === 'indicators'
-                        ? STANDARDS.find(s => metricInfo.standard === s.code)
+                        ? STANDARDS.find(s =>
+                          metricInfo.standard === s.code
+                        )
                         : null
                     }
                     {...props}
@@ -550,43 +553,6 @@ export function mapDispatchToProps(dispatch) {
           },
         ),
       ),
-    onMetricChangeForCountry: (metric, country, base) => {
-      if (base === 'metric') {
-        dispatch(
-          navigate(
-            {
-              pathname: `/metric/${metric}/${country}`,
-            },
-            {
-              replace: false,
-              keepTab: true,
-              trackEvent: {
-                category: 'Modal',
-                action: 'Metric-country',
-                value: `${metric}/${country}`,
-              },
-            },
-          ),
-        );
-      } else {
-        dispatch(
-          navigate(
-            {
-              pathname: `/country/${country}/${metric}`,
-            },
-            {
-              replace: false,
-              keepTab: true,
-              trackEvent: {
-                category: 'Modal',
-                action: 'Country-metric',
-                value: `${country}/${metric}`,
-              },
-            },
-          ),
-        );
-      }
-    },
   };
 }
 const withConnect = connect(

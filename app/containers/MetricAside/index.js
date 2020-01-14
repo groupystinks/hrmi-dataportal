@@ -17,6 +17,7 @@ import { FormNext, FormPrevious } from 'grommet-icons';
 
 import FAQs from 'containers/FAQs';
 import MetricAbout from 'components/MetricAbout';
+
 import { STANDARDS, RIGHTS, INDICATORS } from 'containers/App/constants';
 import {
   getIndicatorInfo,
