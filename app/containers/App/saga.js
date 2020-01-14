@@ -177,10 +177,10 @@ export function* loadContentSaga({ key, contentType = 'page', locale }) {
  * @param {object} payload {key: data set key}
  */
 function* loadDataErrorHandler(err, { key }) {
-  yield put(dataLoadingError(key, err));
+  yield put(dataLoadingError(err, key));
 }
 function* loadContentErrorHandler(err, { key }) {
-  yield put(contentLoadingError(key, err));
+  yield put(contentLoadingError(err, key));
 }
 
 export function* selectCountrySaga({ code }) {
@@ -425,7 +425,7 @@ export function* checkCookieConsentSaga() {
   yield put(cookieConsentChecked(consentStatus));
 }
 export function* setCookieConsentSaga({ status }) {
-  Cookies.set(COOKIECONSENT_NAME, status, { expires: 365 });
+  Cookies.set(COOKIECONSENT_NAME, status, { expires: 365, sameSite: 'strict' });
   yield put(checkCookieConsent());
 }
 // status = consentStatus
