@@ -190,7 +190,6 @@ export function CountryMetric({
   theme,
   onSetBenchmark,
   onSetStandard,
-  // onMetricChangeForCountry,
 }) {
   const layerRef = useRef();
   useInjectSaga({ key: 'app', saga });
@@ -220,30 +219,7 @@ export function CountryMetric({
   const metricTitle =
     metric && intl.formatMessage(rootMessages[metric.metricType][metric.key]);
   const isESR = metric.metricType === 'indicators' || metric.type === 'esr';
-  const ancestors = [{ key: 'all' }];
 
-  if (metric.metricType === 'rights') {
-    ancestors.push({
-      type: 'dimensions',
-      key: metric.dimension,
-    });
-    if (metric.aggregate) {
-      ancestors.push({
-        type: 'rights-short',
-        key: metric.aggregate,
-      });
-    }
-  }
-  if (metric.metricType === 'indicators') {
-    ancestors.push({
-      type: 'dimensions',
-      key: 'esr',
-    });
-    ancestors.push({
-      type: 'rights-short',
-      key: metric.right,
-    });
-  }
   // prettier-ignore
   return (
     <Box overflow="auto" direction="column" ref={layerRef}>
@@ -399,7 +375,6 @@ CountryMetric.propTypes = {
   intl: intlShape.isRequired,
   onClose: PropTypes.func,
   onSelectMetric: PropTypes.func,
-  // onMetricChangeForCountry: PropTypes.func,
   onSetStandard: PropTypes.func,
   onSetBenchmark: PropTypes.func,
   onLoadContent: PropTypes.func,
