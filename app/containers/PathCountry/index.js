@@ -254,6 +254,7 @@ export function PathCountry({
                   showFAQs={
                     props &&
                     (props.activeTab === '0' ||
+                      props.activeTab === 0 ||
                       props.activeTab === 'report' ||
                       props.activeTab === 'about')
                   }
