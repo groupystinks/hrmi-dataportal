@@ -332,7 +332,14 @@ export function mapDispatchToProps(dispatch) {
       dispatch(setRaw(value));
     },
     onCategoryClick: (key, value) => {
-      const deleteParams = ['income', 'region', 'assessed'];
+      const deleteParams = [
+        'income',
+        'region',
+        'assessed',
+        'subregion',
+        'treaties',
+        'cgroups',
+      ];
       dispatch(
         navigate(
           { pathname: '', search: key === 'all' ? '' : `?${key}=${value}` },
