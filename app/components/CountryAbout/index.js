@@ -48,6 +48,8 @@ function CountryAbout({
   currentGDP,
   onCategoryClick,
   showFAQs,
+  title,
+  aside,
 }) {
   if (!country) return null;
   const incomeCode =
@@ -63,11 +65,16 @@ function CountryAbout({
   return (
     <Box
       direction="column"
-      pad={{ horizontal: 'medium', bottom: 'medium', top: 'small' }}
+      pad={{
+        horizontal: aside ? 'medium' : 'small',
+        bottom: 'medium',
+        top: 'small',
+      }}
       style={{ maxWidth: '500px' }}
     >
       <Heading responsive={false} level={3}>
-        <FormattedMessage {...messages.title} />
+        {title}
+        {!title && <FormattedMessage {...messages.title} />}
       </Heading>
       {hasPopulation && (
         <Box direction="row" margin={{ bottom: 'xsmall' }}>
@@ -188,6 +195,8 @@ CountryAbout.propTypes = {
   country: PropTypes.oneOfType([PropTypes.bool, PropTypes.object]),
   auxIndicators: PropTypes.oneOfType([PropTypes.bool, PropTypes.object]),
   currentGDP: PropTypes.oneOfType([PropTypes.bool, PropTypes.object]),
+  title: PropTypes.string,
+  aside: PropTypes.bool,
   intl: intlShape.isRequired,
 };
 

@@ -78,8 +78,11 @@ export function PathMetric({
         <ResponsiveContext.Consumer>
           {size => (
             <Layer
-              full
-              margin={isMinSize(size, 'xlarge') ? 'ms' : 'small'}
+              full="vertical"
+              margin={{
+                top: isMinSize(size, 'xlarge') ? 'large' : 'small',
+                bottom: 'ms',
+              }}
               onEsc={() => onCloseMetricOverlay(metricCode)}
               onClickOutside={() => onCloseMetricOverlay(metricCode)}
               animate={false}
@@ -135,6 +138,7 @@ export function PathMetric({
                   metric={metric}
                   ancestors={ancestors}
                   onSelectMetric={onMetricClick}
+                  aside
                 />
               ),
             },
