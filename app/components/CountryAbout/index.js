@@ -192,7 +192,7 @@ function CountryAbout({
           </Box>
           <Box width="50%">
             {countryGroups.map(g => (
-              <Button onClick={() => onCategoryClick('cgroup', g)}>
+              <Button key={g} onClick={() => onCategoryClick('cgroup', g)}>
                 <Text>
                   <FormattedMessage {...rootMessages.countryGroups[g]} />
                 </Text>
@@ -214,7 +214,7 @@ function CountryAbout({
           </Box>
           <Box width="50%">
             {treaties.map(g => (
-              <Button onClick={() => onCategoryClick('treaty', g)}>
+              <Button key={g} onClick={() => onCategoryClick('treaty', g)}>
                 <Text>
                   <FormattedMessage {...rootMessages.treaties[g]} />
                 </Text>
