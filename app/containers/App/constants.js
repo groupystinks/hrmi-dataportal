@@ -70,8 +70,12 @@ export const COLUMNS = {
   },
   COUNTRIES: {
     HIGH_INCOME: 'high_income_country',
-    OECD: 'OECD_country',
     REGION: 'region_code',
+    SUBREGION: 'subregion_code',
+    GROUPS: 'group_codes',
+    TREATIES: 'treaty_codes',
+    STATUS: 'country_status',
+    RELATED: 'related_country_code',
   },
 };
 
@@ -107,11 +111,11 @@ export const PAGES = ['about', 'methodology'];
 export const DATA_RESOURCES = [
   {
     key: 'countries',
-    file: 'countries.csv',
+    file: 'countries_v2.csv',
   },
   {
     key: 'countriesGrammar',
-    file: 'countries_grammar.csv',
+    file: 'countries_grammar_v2.csv',
   },
   {
     key: 'esrIndicators',
@@ -160,9 +164,19 @@ export const REGIONS = [
   'south-asia',
   'sub-saharan-africa',
 ];
+export const SUBREGIONS = [
+  'pacific',
+  'east-asia',
+  'central-asia',
+  'europe',
+  'north-africa',
+  'middle-east',
+];
+export const COUNTRY_GROUPS = ['oecd', 'not-oecd', 'asean', 'oic'];
+
+export const TREATIES = ['icescr', 'iccpr'];
 
 export const ASSESSED_FILTERS = ['all', 'cpr-all', 'esr-all', 'some'];
-export const OECD_FILTERS = ['1', '0'];
 
 // column: 'high_income_country',
 export const INCOME_GROUPS = [

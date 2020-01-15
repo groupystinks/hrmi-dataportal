@@ -14,13 +14,15 @@ import { Box, InfiniteScroll, ResponsiveContext } from 'grommet';
 
 import {
   getRegionSearch,
+  getSubregionSearch,
   getIncomeSearch,
+  getCountryGroupSearch,
+  getTreatySearch,
   getBenchmarkSearch,
   getStandardSearch,
   getScaleSearch,
   getESRIndicators,
   getAssessedSearch,
-  getOECDSearch,
   getSortSearch,
   getSortOrderSearch,
 } from 'containers/App/selectors';
@@ -30,7 +32,12 @@ import {
   highlightCountry,
 } from 'containers/App/actions';
 
-import { STANDARDS, BENCHMARKS, COUNTRY_SORTS } from 'containers/App/constants';
+import {
+  STANDARDS,
+  BENCHMARKS,
+  COUNTRY_SORTS,
+  COLUMNS,
+} from 'containers/App/constants';
 
 import LoadingIndicator from 'components/LoadingIndicator';
 import Source from 'components/Source';
@@ -39,22 +46,37 @@ import CountrySort from 'components/CountrySort';
 import CountryFilters from 'components/CountryFilters';
 import MainColumn from 'styled/MainColumn';
 import Hint from 'styled/Hint';
+
 import { isMinSize, isMaxSize } from 'utils/responsive';
 import { sortCountries, getScoresForCountry } from 'utils/scores';
+import { getFilterOptionValues } from 'utils/countries';
 
 import rootMessages from 'messages';
 
 export const isDefaultStandard = (country, standardDetails) =>
-  (country.high_income_country === '0' && standardDetails.key === 'core') ||
-  (country.high_income_country === '1' && standardDetails.key === 'hi');
+  (country[COLUMNS.COUNTRIES.HIGH_INCOME] === '0' &&
+    standardDetails.key === 'core') ||
+  (country[COLUMNS.COUNTRIES.HIGH_INCOME] === '1' &&
+    standardDetails.key === 'hi');
+
+const FILTER_GROUPS = [
+  'income',
+  'region',
+  'subregion',
+  'cgroup',
+  'treaty',
+  'assessed',
+];
 
 export function OverviewCountries({
   countries,
   scoresAllCountries,
   regionFilterValue,
+  subregionFilterValue,
   incomeFilterValue,
   assessedFilterValue,
-  oecdFilterValue,
+  countryGroupFilterValue,
+  treatyFilterValue,
   onRemoveFilter,
   onAddFilter,
   onSelectCountry,
@@ -86,6 +108,7 @@ export function OverviewCountries({
     order: currentSortOrder,
     scores: scoresAllCountries,
   });
+  const filterValues = getFilterOptionValues(countries, FILTER_GROUPS);
   return (
     <ResponsiveContext.Consumer>
       {size => (
@@ -98,12 +121,14 @@ export function OverviewCountries({
           >
             <CountryFilters
               regionFilterValue={regionFilterValue}
+              subregionFilterValue={subregionFilterValue}
               onRemoveFilter={onRemoveFilter}
               onAddFilter={onAddFilter}
               incomeFilterValue={incomeFilterValue}
               assessedFilterValue={assessedFilterValue}
-              oecdFilterValue={oecdFilterValue}
-              filterGroups={['income', 'region', 'assessed', 'oecd']}
+              countryGroupFilterValue={countryGroupFilterValue}
+              treatyFilterValue={treatyFilterValue}
+              filterValues={filterValues}
             />
             <CountrySort
               sort={currentSort}
@@ -177,9 +202,14 @@ OverviewCountries.propTypes = {
   onRemoveFilter: PropTypes.func,
   onAddFilter: PropTypes.func,
   regionFilterValue: PropTypes.oneOfType([PropTypes.bool, PropTypes.string]),
+  subregionFilterValue: PropTypes.oneOfType([PropTypes.bool, PropTypes.string]),
   incomeFilterValue: PropTypes.oneOfType([PropTypes.bool, PropTypes.string]),
   assessedFilterValue: PropTypes.oneOfType([PropTypes.bool, PropTypes.string]),
-  oecdFilterValue: PropTypes.oneOfType([PropTypes.bool, PropTypes.string]),
+  countryGroupFilterValue: PropTypes.oneOfType([
+    PropTypes.bool,
+    PropTypes.string,
+  ]),
+  treatyFilterValue: PropTypes.oneOfType([PropTypes.bool, PropTypes.string]),
   intl: intlShape.isRequired,
   scale: PropTypes.oneOfType([PropTypes.bool, PropTypes.string]),
   standard: PropTypes.oneOfType([PropTypes.bool, PropTypes.string]),
@@ -195,9 +225,11 @@ OverviewCountries.propTypes = {
 
 const mapStateToProps = createStructuredSelector({
   regionFilterValue: state => getRegionSearch(state),
+  subregionFilterValue: state => getSubregionSearch(state),
   incomeFilterValue: state => getIncomeSearch(state),
   assessedFilterValue: state => getAssessedSearch(state),
-  oecdFilterValue: state => getOECDSearch(state),
+  countryGroupFilterValue: state => getCountryGroupSearch(state),
+  treatyFilterValue: state => getTreatySearch(state),
   scale: state => getScaleSearch(state),
   standard: state => getStandardSearch(state),
   benchmark: state => getBenchmarkSearch(state),

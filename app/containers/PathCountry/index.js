@@ -113,10 +113,13 @@ export function PathCountry({
   const incomeGroup =
     country &&
     INCOME_GROUPS.find(g => quasiEquals(g.value, country.high_income_country));
-
+  if (!rootMessages.countries[countryCode]) {
+    console.log('Country code not in language files:', countryCode);
+  }
   const countryTitle =
-    countryCode && intl.formatMessage(rootMessages.countries[countryCode]);
-
+    countryCode && rootMessages.countries[countryCode]
+      ? intl.formatMessage(rootMessages.countries[countryCode])
+      : countryCode;
   const onCloseLayer = () => {
     onCloseMetricOverlay(countryCode);
   };
@@ -166,13 +169,6 @@ export function PathCountry({
                     value: country.region_code,
                     label: intl.formatMessage(
                       rootMessages.regions[country.region_code],
-                    ),
-                  },
-                  {
-                    key: 'oecd',
-                    value: country.OECD_country,
-                    label: intl.formatMessage(
-                      rootMessages.oecd[country.OECD_country],
                     ),
                   },
                   {
