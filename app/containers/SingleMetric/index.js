@@ -88,6 +88,7 @@ const DEPENDENCIES = [
   'esrScores',
   'esrIndicators',
   'esrIndicatorScores',
+  'auxIndicators',
 ];
 
 const getESRDimensionValue = (score, benchmark) => {
