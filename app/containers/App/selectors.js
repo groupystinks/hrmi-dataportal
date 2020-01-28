@@ -492,6 +492,7 @@ export const getESRRightScores = createSelector(
   getESRScores,
   getCountriesFiltered,
   getHasCountryFilters,
+  getStandardSearch,
   getGroupSearch,
   getESRYear,
   (
