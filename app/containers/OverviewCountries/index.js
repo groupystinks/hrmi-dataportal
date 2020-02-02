@@ -221,15 +221,15 @@ OverviewCountries.propTypes = {
   onSelectCountry: PropTypes.func,
   onRemoveFilter: PropTypes.func,
   onAddFilter: PropTypes.func,
-  regionFilterValue: PropTypes.oneOfType([PropTypes.bool, PropTypes.string]),
-  subregionFilterValue: PropTypes.oneOfType([PropTypes.bool, PropTypes.string]),
-  incomeFilterValue: PropTypes.oneOfType([PropTypes.bool, PropTypes.string]),
-  assessedFilterValue: PropTypes.oneOfType([PropTypes.bool, PropTypes.string]),
+  regionFilterValue: PropTypes.oneOfType([PropTypes.bool, PropTypes.array]),
+  subregionFilterValue: PropTypes.oneOfType([PropTypes.bool, PropTypes.array]),
+  incomeFilterValue: PropTypes.oneOfType([PropTypes.bool, PropTypes.array]),
+  assessedFilterValue: PropTypes.oneOfType([PropTypes.bool, PropTypes.array]),
   countryGroupFilterValue: PropTypes.oneOfType([
     PropTypes.bool,
-    PropTypes.string,
+    PropTypes.array,
   ]),
-  treatyFilterValue: PropTypes.oneOfType([PropTypes.bool, PropTypes.string]),
+  treatyFilterValue: PropTypes.oneOfType([PropTypes.bool, PropTypes.array]),
   intl: intlShape.isRequired,
   scale: PropTypes.oneOfType([PropTypes.bool, PropTypes.string]),
   standard: PropTypes.oneOfType([PropTypes.bool, PropTypes.string]),
@@ -260,17 +260,22 @@ const mapStateToProps = createStructuredSelector({
 
 export function mapDispatchToProps(dispatch) {
   return {
-    onRemoveFilter: key =>
+    onRemoveFilter: (key, value) =>
       dispatch(
         navigate(
           { pathname: '' },
           {
             replace: false,
-            deleteParams: [key],
+            deleteParams: [
+              {
+                key,
+                value,
+              },
+            ],
             trackEvent: {
               category: 'Data',
               action: 'Remove country filter (Overview)',
-              value: key,
+              value: `${key}/${value}`,
             },
           },
         ),
@@ -283,6 +288,7 @@ export function mapDispatchToProps(dispatch) {
           { search: `?${key}=${value}` },
           {
             replace: false,
+            multiple: true,
             trackEvent: {
               category: 'Data',
               action: 'Country filter (Overview)',
