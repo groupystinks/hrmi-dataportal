@@ -60,6 +60,18 @@ export default defineMessages({
       defaultMessage: 'treaties',
     },
   },
+  gdpHintPPP: {
+    id: `${scope}.gdpHintPPP`,
+    defaultMessage: '(2011 PPP dollars)',
+  },
+  gdpTooltipPPP: {
+    id: `${scope}.gdpTooltipPPP`,
+    defaultMessage: 'About PPP dollars',
+  },
+  oecd: {
+    id: `${scope}.oecd`,
+    defaultMessage: 'OECD status',
+  },
   region: {
     id: `${scope}.region`,
     defaultMessage: 'Region',
